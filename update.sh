@@ -7,9 +7,4 @@ git pull
 composer install
 php artisan migrate
 php artisan db:seed
-php artisan optimize:clear
-#php artisan optimize
-
-# Listfile
-#php artisan listfile:download
-#php artisan listfile:cache
+php artisan optimize

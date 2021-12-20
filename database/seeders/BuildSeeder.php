@@ -102,7 +102,7 @@ final class BuildSeeder extends Seeder
             [
                 'product'    => 'wowe1',
                 'name'       => 'WoW Event 1',
-                'badgeText'  => 'Vendor',
+                'badgeText'  => 'Event 1',
                 'badgeType'  => 'bg-secondary',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -110,7 +110,7 @@ final class BuildSeeder extends Seeder
             [
                 'product'    => 'wowe2',
                 'name'       => 'WoW Event 2',
-                'badgeText'  => 'Event 1',
+                'badgeText'  => 'Event 2',
                 'badgeType'  => 'bg-secondary',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -118,7 +118,7 @@ final class BuildSeeder extends Seeder
             [
                 'product'    => 'wowe3',
                 'name'       => 'WoW Event 3',
-                'badgeText'  => 'Event 2',
+                'badgeText'  => 'Event 3',
                 'badgeType'  => 'bg-secondary',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

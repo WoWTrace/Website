@@ -16,10 +16,10 @@ use Throwable;
 class HomeScreen extends Screen
 {
     /** @inerhitDoc */
-    public $name = 'TACT.Builder';
+    public $name = 'WoWData.tools';
 
     /** @inerhitDoc */
-    public $description = 'Backend';
+    public $description = 'WoWData.tools shows data from World of Warcraft in a clear form and should help with data mining. To use this website you need a basic understanding of the World of Warcraft structure.';
 
     /** @inerhitDoc */
     public function query(): array
