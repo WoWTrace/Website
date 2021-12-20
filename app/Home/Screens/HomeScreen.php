@@ -6,6 +6,7 @@ use App\Home\Layouts\ChartListFileEntriesLastSvenDays;
 use App\Home\Layouts\ChartUsedExtension;
 use App\Home\Layouts\ListLastAddedListFileEntries;
 use App\Home\Layouts\MetricsListFileNewToday;
+use App\Home\Layouts\ProductEntries;
 use Auth;
 use Orchid\Screen\Action;
 use Orchid\Screen\Layout;
@@ -24,12 +25,8 @@ class HomeScreen extends Screen
     /** @inerhitDoc */
     public function query(): array
     {
-        return [];
         return [
-            MetricsListFileNewToday::TARGET          => MetricsListFileNewToday::getContent(),
-            ChartListFileEntriesLastSvenDays::TARGET => ChartListFileEntriesLastSvenDays::getContent(),
-            ListLastAddedListFileEntries::TARGET     => ListLastAddedListFileEntries::getContent(),
-            ChartUsedExtension::TARGET               => ChartUsedExtension::getContent(),
+            ProductEntries::TARGET => ProductEntries::getContent(),
         ];
     }
 
@@ -53,14 +50,10 @@ class HomeScreen extends Screen
      */
     public function layout(): array
     {
-        return [];
-
         return [
-            MetricsListFileNewToday::class,
-            ChartListFileEntriesLastSvenDays::class,
             OrchidLayout::columns([
-                ListLastAddedListFileEntries::class,
-                ChartUsedExtension::class,
+                ProductEntries::class,
+                OrchidLayout::columns([])
             ])
         ];
     }

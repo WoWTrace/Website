@@ -18,6 +18,7 @@ use Orchid\Screen\AsSource;
  * @property string $name
  * @property string $badgeText
  * @property string $badgeType
+ * @property boolean $encrypted
  * @property string|null $lastVersion
  * @property string|null $lastBuildConfig
  * @property Carbon|null $detected
@@ -43,6 +44,7 @@ final class Product extends Model
         'name',
         'badgeText',
         'badgeType',
+        'encrypted',
         'lastVersion',
         'lastBuildConfig',
         'detected',
@@ -50,6 +52,7 @@ final class Product extends Model
 
     /** @inerhitDoc */
     protected $casts = [
+        'encrypted'  => 'boolean',
         'detected'   => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
