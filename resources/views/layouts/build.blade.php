@@ -38,7 +38,11 @@
         </tr>
         <tr>
             <td><b>Patch Config</b></td>
-            <td><span class="badge bg-success hash">{{$patchConfig ?? __('Unknown')}}</span></td>
+            <td>
+                @if (!empty($patchConfig))
+                <span class="badge bg-success hash">{{$patchConfig}}</span>
+                @endif
+            </td>
         </tr>
         <tr>
             <td><b>Product Config</b></td>

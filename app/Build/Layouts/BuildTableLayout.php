@@ -2,15 +2,7 @@
 
 namespace App\Build\Layouts;
 
-use App\Common\Screen\Actions\Span;
-use App\ListFile\Services\ListFileService;
 use App\Models\Build;
-use App\Models\ListFile;
-use App\Models\User;
-use Auth;
-use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Actions\DropDown;
-use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Table;
@@ -39,7 +31,7 @@ class BuildTableLayout extends Table
         return [
             TD::make('patch', __('Patch'))
                 ->cantHide()
-                ->width('100px')
+                ->width('110px')
                 ->filter(Input::make()),
 
             TD::make('build', __('Build'))

@@ -2,12 +2,7 @@
 
 namespace App\Home\Screens;
 
-use App\Home\Layouts\ChartListFileEntriesLastSvenDays;
-use App\Home\Layouts\ChartUsedExtension;
-use App\Home\Layouts\ListLastAddedListFileEntries;
-use App\Home\Layouts\MetricsListFileNewToday;
 use App\Home\Layouts\ProductEntries;
-use Auth;
 use Orchid\Screen\Action;
 use Orchid\Screen\Layout;
 use Orchid\Screen\Screen;

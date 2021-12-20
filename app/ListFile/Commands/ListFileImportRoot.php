@@ -2,12 +2,10 @@
 
 namespace App\ListFile\Commands;
 
-use App\Models\ListFile;
 use App\Models\Product;
 use Erorus\CASC\Manifest\Root;
 use Erorus\CASC\VersionConfig\HTTP as HTTPVersionConfig;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use Throwable;
 
 class ListFileImportRoot extends Command

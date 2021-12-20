@@ -6,7 +6,6 @@ namespace App\Home;
 
 use App\Home\Screens\HomeScreen;
 use Illuminate\Support\Facades\Route;
-use Orchid\Platform\Dashboard;
 use Orchid\Screen\Actions\Menu;
 
 final class Platform
