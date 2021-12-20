@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: TACT.Builder Backend
+  description: This project serves as an API interface for TACT.Builder and is intended to simplify the collaboration and management of multiple TACT.Builder instances.
+  contact:
+    name: Github
+    url: https://github.com/InternWoWTools/TACT.Builder.Backend
+paths:
+  /api/v1/listfile/getById:
+    post:
+      summary: Get listfile entry by id
+      tags:
+        - ListFile
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  $ref: '#/components/schemas/ListFileIdProperty'
+      responses:
+        200:
+          $ref: '#/components/responses/ListFileResponse'
+  /api/v1/listfile/getByPath:
+    post:
+      summary: Get listfile entry by path
+      tags:
+        - ListFile
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - path
+              properties:
+                path:
+                  $ref: '#/components/schemas/ListFilePathProperty'
+      responses:
+        200:
+          $ref: '#/components/responses/ListFileResponse'
+  /api/v1/listfile/insert:
+    put:
+      summary: Insert new listfile entry
+      tags:
+        - ListFile
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - path
+              properties:
+                path:
+                  $ref: '#/components/schemas/ListFilePathProperty'
+      responses:
+        200:
+          $ref: '#/components/responses/ListFileResponse'
+  /api/v1/listfile/download:
+    get:
+      summary: Download full listfile
+      tags:
+        - ListFile
+      security:
+        - basicAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "1;interface/cinematics/logo_800.avi\n..."
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    ListFileIdProperty:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+      example: 1
+    ListFilePathProperty:
+      type: string
+      minLength: 1
+      maxLength: 265
+      example: "interface/cinematics/logo_800.avi"
+  responses:
+    ListFileResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/ListFileIdProperty'
+              path:
+                $ref: '#/components/schemas/ListFilePathProperty'

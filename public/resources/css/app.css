@@ -1,0 +1,10 @@
+.badge.bg-warning {
+    color: #212529 !important;
+}
+
+.hash {
+    min-width: 220px;
+    font-size: 12px;
+    font-family: monospace;
+    color: #000 !important;
+}

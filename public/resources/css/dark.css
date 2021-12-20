@@ -1,0 +1,178 @@
+:root {
+    --bs-blue: #007bff;
+    --bs-indigo: #6610f2;
+    --bs-purple: #6f42c1;
+    --bs-pink: #e83e8c;
+    --bs-red: #dc3545;
+    --bs-orange: #fd7e14;
+    --bs-yellow: #ffc107;
+    --bs-green: #28a745;
+    --bs-teal: #20c997;
+    --bs-cyan: #17a2b8;
+    --bs-white: #fff;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-gray-100: #f8f9fa;
+    --bs-gray-200: #e9ecef;
+    --bs-gray-300: #dee2e6;
+    --bs-gray-400: #ced4da;
+    --bs-gray-500: #adb5bd;
+    --bs-gray-600: #6c757d;
+    --bs-gray-700: #495057;
+    --bs-gray-800: #343a40;
+    --bs-gray-900: #212529;
+    --bs-primary: #007bff;
+    --bs-secondary: #6c757d;
+    --bs-success: #28a745;
+    --bs-info: #17a2b8;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #212529;
+    --bs-primary-rgb: 0, 123, 255;
+    --bs-secondary-rgb: 108, 117, 125;
+    --bs-success-rgb: 40, 167, 69;
+    --bs-info-rgb: 23, 162, 184;
+    --bs-warning-rgb: 255, 193, 7;
+    --bs-danger-rgb: 220, 53, 69;
+    --bs-light-rgb: 248, 249, 250;
+    --bs-dark-rgb: 33, 37, 41;
+    --bs-white-rgb: 255, 255, 255;
+    --bs-black-rgb: 28, 43, 54;
+    --bs-body-color-rgb: 33, 37, 41;
+    --bs-body-bg-rgb: 52, 58, 64;
+    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --bs-gradient: linear-gradient(180deg, hsla(0, 0%, 100%, .15), hsla(0, 0%, 100%, 0));
+    --bs-body-font-family: var(--bs-font-sans-serif);
+    --bs-body-font-size: 1rem;
+    --bs-body-font-weight: 400;
+    --bs-body-line-height: 1.5;
+    --bs-body-color: #212529;
+    --bs-body-bg: #343a40;
+}
+
+
+* {
+    color: var(--bs-gray-400) !important;
+}
+
+a:focus, a:hover {
+    color: var(--bs-white) !important;
+}
+
+body, html {
+    background-color: var(--bs-body-bg);
+}
+
+.layout, .bg-white {
+    background-color: #272727 !important
+}
+
+.bg-light, .page-link, .dropdown-menu, .dropdown-item {
+    background-color: #3a4046 !important
+}
+
+::placeholder {
+    color: #9d9d9d !important;
+}
+
+.text-black {
+    color: var(--bs-gray-400) !important;
+}
+
+.bg-white a:hover {
+    color: var(--bs-gray-400) !important;
+}
+
+.pagination .page-item.active .page-link,
+.pagination .page-item.active .page-link:focus,
+.pagination .page-item.active .page-link:hover,
+.pagination .page-item.active span,
+.pagination .page-item.active span:focus,
+.pagination .page-item.active span:hover,
+.pagination > li.active .page-link,
+.pagination > li.active .page-link:focus,
+.pagination > li.active .page-link:hover,
+.pagination > li.active span,
+.pagination > li.active span:focus,
+.pagination > li.active span:hover,
+.layout .text-muted,
+.page-link:hover,
+.text-muted {
+    color: var(--bs-gray-500) !important;
+}
+
+.command-bar .btn:focus,
+.command-bar .btn:hover,
+.command-bar .dropzone-wrapper .dz-preview .btn-edit:focus,
+.command-bar .dropzone-wrapper .dz-preview .btn-edit:hover,
+.command-bar .dropzone-wrapper .dz-preview .btn-remove:focus,
+.command-bar .dropzone-wrapper .dz-preview .btn-remove:hover,
+.command-bar .dropzone .dz-preview .btn-edit:focus,
+.command-bar .dropzone .dz-preview .btn-edit:hover,
+.command-bar .dropzone .dz-preview .btn-remove:focus,
+.command-bar .dropzone .dz-preview .btn-remove:hover,
+.dropdown-item:focus,
+.dropdown-item:hover,
+.dropzone-wrapper .dz-preview .command-bar .btn-edit:focus,
+.dropzone-wrapper .dz-preview .command-bar .btn-edit:hover,
+.dropzone-wrapper .dz-preview .command-bar .btn-remove:focus,
+.dropzone-wrapper .dz-preview .command-bar .btn-remove:hover,
+.dropzone-wrapper .dz-preview .table td .btn-edit:focus,
+.dropzone-wrapper .dz-preview .table td .btn-edit:hover,
+.dropzone-wrapper .dz-preview .table td .btn-remove:focus,
+.dropzone-wrapper .dz-preview .table td .btn-remove:hover,
+.dropzone .dz-preview .command-bar .btn-edit:focus,
+.dropzone .dz-preview .command-bar .btn-edit:hover,
+.dropzone .dz-preview .command-bar .btn-remove:focus,
+.dropzone .dz-preview .command-bar .btn-remove:hover,
+.dropzone .dz-preview .table td .btn-edit:focus,
+.dropzone .dz-preview .table td .btn-edit:hover,
+.dropzone .dz-preview .table td .btn-remove:focus,
+.dropzone .dz-preview .table td .btn-remove:hover,
+.table td .btn:focus,
+.table td .btn:hover,
+.table td .dropzone-wrapper .dz-preview .btn-edit:focus,
+.table td .dropzone-wrapper .dz-preview .btn-edit:hover,
+.table td .dropzone-wrapper .dz-preview .btn-remove:focus,
+.table td .dropzone-wrapper .dz-preview .btn-remove:hover,
+.table td .dropzone .dz-preview .btn-edit:focus,
+.table td .dropzone .dz-preview .btn-edit:hover,
+.table td .dropzone .dz-preview .btn-remove:focus,
+.table td .dropzone .dz-preview .btn-remove:hover {
+    background-color: var(--bs-gray-600) !important;
+    color: var(--bs-white) !important;
+}
+
+.btn-default {
+    background-color: var(--bs-gray-600) !important;
+    color: var(--bs-white) !important;
+    border-color: var(--bs-gray-800) !important;
+}
+
+.modal-content,
+.modal .modal-footer,
+.select2-dropdown,
+.select2-results__option {
+    background: #272727 !important;
+}
+
+.bootstrap-tagsinput,
+.chosen-choices,
+.chosen-single,
+.form-control,
+.select2-container--bootstrap
+.select2-search--dropdown .select2-search__field,
+.select2-container--bootstrap .select2-selection {
+    background: #fff0 none !important;
+    border: solid 1px var(--bs-gray-400) !important;
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
+    background: #484848 !important;
+}
+
+.alert-danger {
+    background-color: #762424 !important;
+}
