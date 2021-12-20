@@ -17,6 +17,7 @@ class CreateProductTable extends Migration
             $table->string('badgeText', 255);
             $table->string('badgeType', 255);
             $table->string('lastVersion', 30)->nullable();
+            $table->string('lastBuildConfig', 32)->nullable();
             $table->timestamp('detected')->nullable();
             $table->timestamps();
         });

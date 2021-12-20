@@ -14,8 +14,8 @@ class CreateBuildTable extends Migration
             $table->id();
             $table->char('buildConfig', 32)->index()->unique();
             $table->char('cdnConfig', 32)->index();
-            $table->char('patchConfig', 32);
-            $table->char('productConfig', 32)->nullable();
+            $table->char('patchConfig', 32)->nullable();
+            $table->char('productConfig', 32);
             $table->string('product', 32);
             $table->string('expansion', 4);
             $table->string('major', 4);

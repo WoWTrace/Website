@@ -2,8 +2,12 @@
     <table class="table table-striped table-condensed">
         <tbody>
         <tr>
-            <td>Description</td>
-            <td>WOW-41531patch2.5.3_Submission</td>
+            <td>Build Name</td>
+            <td>{{$buildName ?? __('Unknown')}}</td>
+        </tr>
+        <tr>
+            <td>Version</td>
+            <td>{{$version ?? __('Unknown')}}</td>
         </tr>
         <tr>
             <td>Product</td>
@@ -42,7 +46,7 @@
         </tr>
         </tbody>
     </table>
-    <h4 class="modal-title text-black fw-light mt-md-4">Build config files</h4>
+    <h4 class="modal-title text-black fw-light mt-md-4">System files</h4>
     <table class="table table-sm table-striped table-condensed">
         <thead>
         <tr>

@@ -56,31 +56,31 @@ class DetailModalLayout extends Layout
      */
     public function render(): View
     {
-        if ($this->target instanceof Build)
-        {
+        if ($this->target instanceof Build) {
             /** @var Product $product */
             $product = $this->target->product()->first();
 
             return view($this->template, [
-                'product' => $product->product,
-                'productName' => $product->name,
-                'buildConfig' => $this->target->buildConfig,
-                'cdnConfig' => $this->target->cdnConfig,
-                'patchConfig' => $this->target->patchConfig,
+                'product'       => $product->product,
+                'productName'   => $product->name,
+                'buildName'     => $this->target->name,
+                'version'       => sprintf('%s.%u', $this->target->patch, $this->target->build),
+                'buildConfig'   => $this->target->buildConfig,
+                'cdnConfig'     => $this->target->cdnConfig,
+                'patchConfig'   => $this->target->patchConfig,
                 'productConfig' => $this->target->productConfig,
-                'detected' => $this->target->created_at->format('Y-m-d H:i:s'),
-
+                'detected'      => $this->target->created_at->format('Y-m-d H:i:s'),
 
                 'encodingContentHash' => $this->target->encodingContentHash,
-                'encodingCdnHash' => $this->target->encodingCdnHash,
-                'rootContentHash' => $this->target->rootContentHash,
-                'rootCdnHash' => $this->target->rootCdnHash,
-                'installContentHash' => $this->target->installContentHash,
-                'installCdnHash' => $this->target->installCdnHash,
-                'downloadCdnHash' => $this->target->downloadCdnHash,
+                'encodingCdnHash'     => $this->target->encodingCdnHash,
+                'rootContentHash'     => $this->target->rootContentHash,
+                'rootCdnHash'         => $this->target->rootCdnHash,
+                'installContentHash'  => $this->target->installContentHash,
+                'installCdnHash'      => $this->target->installCdnHash,
+                'downloadCdnHash'     => $this->target->downloadCdnHash,
                 'downloadContentHash' => $this->target->downloadContentHash,
-                'sizeContentHash' => $this->target->sizeContentHash,
-                'sizeCdnHash' => $this->target->sizeCdnHash,
+                'sizeContentHash'     => $this->target->sizeContentHash,
+                'sizeCdnHash'         => $this->target->sizeCdnHash,
             ]);
         }
         return view($this->template);

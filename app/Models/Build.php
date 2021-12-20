@@ -22,7 +22,8 @@ use Orchid\Screen\AsSource;
  * @property string $major
  * @property string $minor
  * @property int $build
- * @property-read  string $patch
+ * @property-read string $patch
+ * @property string $name
  * @property string $encodingContentHash
  * @property string $encodingCdnHash
  * @property string $rootContentHash

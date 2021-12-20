@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef743f5fa99b577622ae4d314e20bf93",
+    "content-hash": "f98132dbc03b1dcfcba843ac5fcaaea4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1729,7 +1729,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Luzifix/casc.git",
-                "reference": "a06455df6e5bcea86552d894d5212d8a5915865c"
+                "reference": "bce8764de5934cef503036758105c2f9ae048a58"
             },
             "require": {
                 "ext-curl": "*",
@@ -1754,7 +1754,7 @@
                 }
             ],
             "description": "CASC extractor for World of Warcraft data",
-            "time": "2021-12-18T22:26:08+00:00"
+            "time": "2021-12-20T06:59:54+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -10479,7 +10479,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",

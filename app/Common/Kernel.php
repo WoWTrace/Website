@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // Builds
-        $schedule->command('build:crawl')->everyTenMinutes()->emailOutputOnFailure('');
+        $schedule->command('build:crawl')->everyTenMinutes();
 
         // Clean
         $schedule->command('tact:clean-cache')->daily()->withoutOverlapping();

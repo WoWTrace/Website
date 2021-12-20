@@ -45,7 +45,6 @@ class BuildCrawl extends Command
 
     public function crawl(Product $product): void
     {
-
         ini_set('memory_limit', '2G');
 
         $this->info(sprintf('Crawl product %s ("%s")...', $product->name, $product->product));
@@ -57,7 +56,7 @@ class BuildCrawl extends Command
         $cdnConfigHash   = $versionConfig->getCDNConfig();
 
         if (empty($version) || empty($buildConfigHash) || empty($cdnConfigHash) ) {
-            $this->info(sprintf('Skip product %s because versions file is empty', $buildConfigHash, $product->product), 'v');
+            $this->info(sprintf('Skip product %s because versions file is empty', $product->product), 'v');
             return;
         }
 
@@ -115,6 +114,7 @@ class BuildCrawl extends Command
             'major'               => $versionParts[1],
             'minor'               => $versionParts[2],
             'build'               => (int)$versionParts[3],
+            'name'                => $buildConfig->getByKey('build-name')[0],
             'encodingContentHash' => $buildConfig->getByKey('encoding')[0],
             'encodingCdnHash'     => $buildConfig->getByKey('encoding')[1],
             'rootContentHash'     => $buildConfig->getByKey('root')[0],
