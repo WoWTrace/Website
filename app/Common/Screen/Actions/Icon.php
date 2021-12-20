@@ -19,7 +19,7 @@ class Icon extends Action
     /**
      * @var string
      */
-    protected $view = 'actions.Icon';
+    protected $view = 'actions.icon';
 
     /**
      * Default attributes value.
