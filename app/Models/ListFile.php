@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Orchid\Filters\Filterable;
+use Orchid\Filters\HttpFilter;
 use Orchid\Screen\AsSource;
 
 /**
@@ -17,15 +18,16 @@ use Orchid\Screen\AsSource;
  * @property int $id
  * @property string|null $path
  * @property string|null $type
- * @property int|null $user_id
+ * @property int|null $userId
  * @property string|null $lookup
- * @property string|null $content_hash
- * @property string|null $root_cdn
+ * @property string|null $contentHash
+ * @property string|null $rootCdnHash
  * @property bool $verified
+ * @property bool $encrypted
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|ListFile defaultSort(string $column, string $direction = 'asc')
- * @method static Builder|ListFile filters(?\Orchid\Filters\HttpFilter $httpFilter = null)
+ * @method static Builder|ListFile filters(?HttpFilter $httpFilter = null)
  * @method static Builder|ListFile filtersApply(array $filters = [])
  * @method static Builder|ListFile filtersApplySelection($selection)
  * @method static Builder|ListFile newModelQuery()
@@ -44,16 +46,18 @@ final class ListFile extends Model
     protected $fillable = [
         'path',
         'type',
-        'user_id',
+        'userId',
         'lookup',
-        'content_hash',
-        'root_cdn',
+        'contentHash',
+        'rootCdnHash',
         'verified',
+        'encrypted',
     ];
 
     /** @inerhitDoc */
     protected $casts = [
         'verified'   => 'boolean',
+        'encrypted'  => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

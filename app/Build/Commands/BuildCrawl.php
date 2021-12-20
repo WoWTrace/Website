@@ -2,6 +2,7 @@
 
 namespace App\Build\Commands;
 
+use App\Jobs\ProcessRoot;
 use App\Models\Build;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -36,6 +37,10 @@ class BuildCrawl extends Command
             //return Command::FAILURE;
         }
 
+        $build = Build::first();
+        ProcessRoot::dispatch($build);
+        return Command::SUCCESS;
+
         $this->cache = $cache;
 
         Product::all()->each([$this, 'crawl']);
@@ -45,7 +50,7 @@ class BuildCrawl extends Command
 
     public function crawl(Product $product): void
     {
-        ini_set('memory_limit', '2G');
+        ini_set('memory_limit', '1G');
 
         $this->info(sprintf('Crawl product %s ("%s")...', $product->name, $product->product));
 
@@ -55,7 +60,7 @@ class BuildCrawl extends Command
         $buildConfigHash = $versionConfig->getBuildConfig();
         $cdnConfigHash   = $versionConfig->getCDNConfig();
 
-        if (empty($version) || empty($buildConfigHash) || empty($cdnConfigHash) ) {
+        if (empty($version) || empty($buildConfigHash) || empty($cdnConfigHash)) {
             $this->info(sprintf('Skip product %s because versions file is empty', $product->product), 'v');
             return;
         }
@@ -69,9 +74,9 @@ class BuildCrawl extends Command
 
         // Update last detected version
         if ($product->lastBuildConfig !== $buildConfigHash) {
-            $product->lastVersion = $version;
+            $product->lastVersion     = $version;
             $product->lastBuildConfig = $buildConfigHash;
-            $product->detected    = Carbon::now();
+            $product->detected        = Carbon::now();
             $product->update();
         }
 
