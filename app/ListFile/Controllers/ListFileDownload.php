@@ -10,6 +10,22 @@ use function config;
 
 final class ListFileDownload
 {
+    /**
+     * @OA\Get(
+     *     path="/api/v1/listfile/download",
+     *     summary="Download full listfile",
+     *     tags={"ListFile"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\MediaType(
+     *             mediaType="text/plain",
+     *             example="1;interface/cinematics/logo_800.avi"
+     *         ),
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     * )
+     */
     public function __invoke(): Response
     {
         /** @var string $listFileName */

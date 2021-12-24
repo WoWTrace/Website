@@ -11,13 +11,36 @@ use function abort;
 
 final class ListFileGetByPath
 {
+    /**
+     * @OA\Post(
+     *     path="/api/v1/listfile/getByPath",
+     *     summary="Get listfile entry by path",
+     *     tags={"ListFile"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="path", type="string", example="interface/cinematics/logo_800.avi")
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="path", type="string", example="interface/cinematics/logo_800.avi"),
+     *         ),
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=404, description="File path not found!"),
+     * )
+     */
     public function __invoke(ListFileGetByPathRequest $request): Response
     {
         $path = (string)$request->get('path');
         $file = ListFile::query()->where('path', $path)->first();
 
         if (!$file) {
-            abort(Response::HTTP_NOT_FOUND, 'File Id not found!');
+            abort(Response::HTTP_NOT_FOUND, 'File path not found!');
         }
 
         return new JsonResponse([
