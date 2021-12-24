@@ -7,22 +7,26 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Orchid\Filters\Filterable;
+use Orchid\Filters\HttpFilter;
 use Orchid\Screen\AsSource;
 
 /**
  * App\Models\Build
+ *
+ * @property int $id
  * @property string $buildConfig
  * @property string $cdnConfig
  * @property string|null $patchConfig
  * @property string $productConfig
- * @property-read Product $product
+ * @property string $productKey
  * @property string $expansion
  * @property string $major
  * @property string $minor
- * @property int $build
- * @property-read string $patch
+ * @property int $clientBuild
+ * @property string|null $patch
  * @property string $name
  * @property string $encodingContentHash
  * @property string $encodingCdnHash
@@ -36,6 +40,11 @@ use Orchid\Screen\AsSource;
  * @property string $sizeCdnHash
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Product $product
+ * @method static Builder|Build defaultSort(string $column, string $direction = 'asc')
+ * @method static Builder|Build filters(?HttpFilter $httpFilter = null)
+ * @method static Builder|Build filtersApply(array $filters = [])
+ * @method static Builder|Build filtersApplySelection($selection)
  * @method static Builder|Build newModelQuery()
  * @method static Builder|Build newQuery()
  * @method static Builder|Build query()
@@ -54,11 +63,12 @@ final class Build extends Model
         'cdnConfig',
         'patchConfig',
         'productConfig',
-        'product',
+        'productKey',
         'expansion',
         'major',
         'minor',
-        'build',
+        'clientBuild',
+        'name',
         'encodingContentHash',
         'encodingCdnHash',
         'rootContentHash',
@@ -97,8 +107,8 @@ final class Build extends Model
         'created_at'
     ];
 
-    public function product()
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product', 'product');
+        return $this->belongsTo(Product::class, 'productKey', 'product');
     }
 }

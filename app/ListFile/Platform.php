@@ -14,7 +14,7 @@ use Tabuna\Breadcrumbs\Trail;
 final class Platform
 {
     public const ROUTE_LISTFILE_OVERVIEW_SLUG = 'listfile';
-    public const ROUTE_LISTFILE_OVERVIEW_KEY  = 'platform.listfile';
+    public const ROUTE_LISTFILE_OVERVIEW_KEY = 'platform.listfile';
 
     public static function boot(Dashboard $dashboard)
     {

@@ -75,7 +75,7 @@ class ListFileDownload extends Command
                 $this->saveQueryBuffer($queryBuffer);
             }
 
-            $path          = trim($line[1]);
+            $path = trim($line[1]);
             $queryBuffer[] = [
                 'id'        => trim($line[0]),
                 'path'      => $path,

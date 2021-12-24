@@ -13,7 +13,7 @@ final class ListFileGetById
 {
     public function __invoke(ListFileGetByIdRequest $request): Response
     {
-        $id   = (int)$request->get('id');
+        $id = (int)$request->get('id');
         $file = ListFile::query()->find($id);
 
         if (!$file) {

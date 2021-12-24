@@ -3,10 +3,9 @@
 namespace App\ListFile\Layouts;
 
 use App\Common\Screen\Actions\Span;
-use App\ListFile\Services\ListFileService;
+use App\Common\Screen\TDWithColor;
 use App\Models\ListFile;
-use Auth;
-use Orchid\Screen\Actions\Button;
+use App\Models\ListFileVersion;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Table;
@@ -15,6 +14,9 @@ use function __;
 
 class ListFileTableLayout extends Table
 {
+    public const COLOR_EMPTY = 'rgba(255, 88, 88, 0.315)';
+    public const COLOR_UNVERIFIED = 'rgba(103, 58, 183, 0.315)';
+
     /**
      * Data source.
      *
@@ -34,42 +36,79 @@ class ListFileTableLayout extends Table
     {
         return [
             TD::make('id', __('FD ID'))
+                ->width(110)
                 ->cantHide()
                 ->sort()
                 ->alignLeft()
-                ->filter(Input::make()->type('number'))
-                ->render(function (ListFile $listFile) {
-                    return Span::make($listFile->id)
-                        ->icon(($listFile->user_id !== ListFileService::getBlizzardUserId()) ? 'pencil' : null)
-                        ->onclick(sprintf('navigator.clipboard.writeText(%u)', $listFile->id));
+                ->filter(Input::make()->type('number')),
+
+            TDWithColor::make('path', __('Filename'))
+                ->sort()
+                ->filter(Input::make())
+                ->alignLeft()
+                ->renderColor(static function (ListFile $listFile, TDWithColor $td) {
+                    if (empty($listFile->path)) {
+                        $td->backgroundColor(self::COLOR_EMPTY);
+                    } elseif (!$listFile->verified) {
+                        $td->backgroundColor(self::COLOR_UNVERIFIED);
+                    }
                 }),
 
-            TD::make('path', __('Filename'))
+            TD::make('versions', __('Versions'))
+                ->width(200)
                 ->sort()
-                ->filter(Input::make()),
+                ->render(static function (ListFile $listFile) {
+                    if ($listFile->versions->isEmpty()) {
+                        return 'No versions available';
+                    }
 
-            TD::make('type', __('Type'))
-                ->sort()
-                ->width('100px')
-                ->alignCenter(),
+                    if ($listFile->versions->count() === 1) {
+                        /** @var ListFileVersion $listFileVersion */
+                        $listFileVersion = $listFile->versions->first();
 
-            TD::make(__('Actions'))
-                ->cantHide()
-                ->alignCenter()
-                ->width('100px')
-                ->canSee(Auth::user()?->hasAccess('listfile.delete') ?? false)
-                ->render(function (ListFile $listFile) {
-                    return DropDown::make()
-                        ->icon('options-vertical')
-                        ->list([
-                            Button::make(__('Delete'))
-                                ->icon('trash')
-                                ->confirm(sprintf(__('Are you sure you want to delete FD ID: <b>%u</b> from ListFile?'), $listFile->id))
-                                ->method('remove', [
-                                    'id' => $listFile->id,
-                                ]),
-                        ]);
+                        $versionBuild = $listFileVersion->build;
+
+                        $span = Span::make(sprintf(
+                            '%s.%u (%s)',
+                            $versionBuild->patch,
+                            $versionBuild->clientBuild,
+                            $versionBuild->product->badgeText
+                        ));
+
+                        if ($listFileVersion->encrypted) {
+                            return $span->icon('lock');
+                        }
+
+                        return $span;
+                    }
+
+                    $versionList = $listFile->versions->map(static function (ListFileVersion $listFileVersion): Span {
+                        $versionBuild = $listFileVersion->build;
+
+                        $span = Span::make(sprintf(
+                            '%s.%u (%s)',
+                            $versionBuild->patch,
+                            $versionBuild->clientBuild,
+                            $versionBuild->product->badgeText
+                        ));
+
+                        if ($listFileVersion->encrypted) {
+                            return $span->icon('lock');
+                        }
+
+                        return $span;
+                    });
+
+                    return DropDown::make(sprintf(__(sprintf('%u Versions', $listFile->versions->count()))))
+                        ->list($versionList->toArray());
                 }),
+
+
+            TDWithColor::make('type', __('Type'))
+                ->width(120)
+                ->sort()
+                ->filter(Input::make())
+                ->alignRight(),
         ];
     }
 }

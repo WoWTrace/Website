@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Build\Layouts;
 
 use App\Models\Build;
-use App\Models\Product;
 use Illuminate\View\View;
 use Orchid\Screen\Layout;
 use Orchid\Screen\Repository;
@@ -57,14 +56,11 @@ class DetailModalLayout extends Layout
     public function render(): View
     {
         if ($this->target instanceof Build) {
-            /** @var Product $product */
-            $product = $this->target->product()->first();
-
             return view($this->template, [
-                'product'       => $product->product,
-                'productName'   => $product->name,
+                'product'       => $this->target->product->product,
+                'productName'   => $this->target->product->name,
                 'buildName'     => $this->target->name,
-                'version'       => sprintf('%s.%u', $this->target->patch, $this->target->build),
+                'version'       => sprintf('%s.%u', $this->target->patch, $this->target->clientBuild),
                 'buildConfig'   => $this->target->buildConfig,
                 'cdnConfig'     => $this->target->cdnConfig,
                 'patchConfig'   => $this->target->patchConfig,

@@ -37,10 +37,6 @@ class BuildCrawl extends Command
             //return Command::FAILURE;
         }
 
-        $build = Build::first();
-        ProcessRoot::dispatch($build);
-        return Command::SUCCESS;
-
         $this->cache = $cache;
 
         Product::all()->each([$this, 'crawl']);
@@ -56,9 +52,9 @@ class BuildCrawl extends Command
 
         $versionConfig = new HTTPVersionConfig($this->cache, $product->product, $this->argument('region'));
 
-        $version         = $versionConfig->getVersion();
+        $version = $versionConfig->getVersion();
         $buildConfigHash = $versionConfig->getBuildConfig();
-        $cdnConfigHash   = $versionConfig->getCDNConfig();
+        $cdnConfigHash = $versionConfig->getCDNConfig();
 
         if (empty($version) || empty($buildConfigHash) || empty($cdnConfigHash)) {
             $this->info(sprintf('Skip product %s because versions file is empty', $product->product), 'v');
@@ -74,9 +70,9 @@ class BuildCrawl extends Command
 
         // Update last detected version
         if ($product->lastBuildConfig !== $buildConfigHash) {
-            $product->lastVersion     = $version;
+            $product->lastVersion = $version;
             $product->lastBuildConfig = $buildConfigHash;
-            $product->detected        = Carbon::now();
+            $product->detected = Carbon::now();
             $product->update();
         }
 
@@ -87,8 +83,6 @@ class BuildCrawl extends Command
 
         try {
             $buildConfig = new Config($this->cache, $versionConfig->getServers(), $versionConfig->getCDNPath(), $buildConfigHash);
-            //$cdnConfig   = new Config($this->cache, $versionConfig->getServers(), $versionConfig->getCDNPath(), $cdnConfigHash);
-
         } catch (Throwable $throwable) {
             $this->error(sprintf('Failed to download build and cdn config for product %s\n%s', $product->product, $throwable->getMessage()));
             return;
@@ -109,16 +103,17 @@ class BuildCrawl extends Command
             return;
         }
 
-        Build::query()->insert([
+        /** @var Build $build */
+        $build = Build::query()->create([
             'buildConfig'         => $buildConfigHash,
             'cdnConfig'           => $cdnConfigHash,
             'patchConfig'         => $buildConfig->getByKey('patch-config')[0] ?? null,
             'productConfig'       => $versionConfig->getProductConfig(),
-            'product'             => $product->product,
+            'productKey'          => $product->product,
             'expansion'           => $versionParts[0],
             'major'               => $versionParts[1],
             'minor'               => $versionParts[2],
-            'build'               => (int)$versionParts[3],
+            'clientBuild'         => (int)$versionParts[3],
             'name'                => $buildConfig->getByKey('build-name')[0],
             'encodingContentHash' => $buildConfig->getByKey('encoding')[0],
             'encodingCdnHash'     => $buildConfig->getByKey('encoding')[1],
@@ -130,9 +125,9 @@ class BuildCrawl extends Command
             'downloadCdnHash'     => $buildConfig->getByKey('download')[1],
             'sizeContentHash'     => $buildConfig->getByKey('size')[0],
             'sizeCdnHash'         => $buildConfig->getByKey('size')[1],
-            'created_at'          => $product->detected,
-            'updated_at'          => $product->detected,
         ]);
+
+        ProcessRoot::dispatch($build);
     }
 
     private function getEncoding(HTTPVersionConfig $versionConfig, Config $buildConfig, Product $product): ?Encoding

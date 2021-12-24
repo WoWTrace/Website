@@ -12,13 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
-    private Factory $authManager;
+    private Factory    $authManager;
     private Redirector $redirector;
 
     public function __construct(Factory $authManager, Redirector $redirector)
     {
         $this->authManager = $authManager;
-        $this->redirector  = $redirector;
+        $this->redirector = $redirector;
     }
 
     /**

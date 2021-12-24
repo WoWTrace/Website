@@ -13,12 +13,13 @@ use Orchid\Screen\AsSource;
 
 /**
  * App\Models\Product
+ *
  * @property int $id
  * @property string $product
  * @property string $name
  * @property string $badgeText
  * @property string $badgeType
- * @property boolean $encrypted
+ * @property bool $encrypted
  * @property string|null $lastVersion
  * @property string|null $lastBuildConfig
  * @property Carbon|null $detected
@@ -60,6 +61,6 @@ final class Product extends Model
 
     public function builds()
     {
-        return $this->hasMany(Build::class, 'product', 'product');
+        return $this->hasMany(Build::class, 'productKey', 'product');
     }
 }

@@ -34,7 +34,7 @@ class BuildTableLayout extends Table
                 ->width('110px')
                 ->filter(Input::make()),
 
-            TD::make('build', __('Build'))
+            TD::make('clientBuild', __('Build'))
                 ->sort()
                 ->width('110px')
                 ->filter(Input::make()->type('number')),
@@ -44,8 +44,8 @@ class BuildTableLayout extends Table
                 ->render(function (Build $build) {
                     return sprintf(
                         '<b class="badge %s">%s</b>',
-                        $build->product()->first()->badgeType,
-                        $build->product()->first()->badgeText
+                        $build->product->badgeType,
+                        $build->product->badgeText
                     );
                 }),
 

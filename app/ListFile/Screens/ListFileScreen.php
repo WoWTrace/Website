@@ -38,8 +38,8 @@ class ListFileScreen extends Screen
         return [
             'listfile' => ListFile::query()
                 ->filters()
-                ->defaultSort('id', 'desc')
-                ->paginate()
+                ->defaultSort('id')
+                ->paginate(25)
         ];
     }
 
@@ -96,7 +96,7 @@ class ListFileScreen extends Screen
             'listfile.path' => 'string|required|unique:listfile,path',
         ]);
 
-        $id   = $request->input('listfile.id');
+        $id = $request->input('listfile.id');
         $path = $request->input('listfile.path');
 
         ListFile::query()->insertOrIgnore([

@@ -53,17 +53,17 @@ class ChartListFileEntriesLastSvenDays extends Chart
             return Cache::get($cacheKey);
         }
 
-        $lastSevenDaysCustomFiles   = [];
+        $lastSevenDaysCustomFiles = [];
         $lastSevenDaysBlizzardFiles = [];
-        $now                        = new DateTime();
+        $now = new DateTime();
 
         for ($day = 1; $day <= 7; $day++) {
             $now->modify('-1 days');
-            $lastSevenDaysCustomFiles[$now->format('Y-m-d')]   = 0;
+            $lastSevenDaysCustomFiles[$now->format('Y-m-d')] = 0;
             $lastSevenDaysBlizzardFiles[$now->format('Y-m-d')] = 0;
         }
 
-        $lastSevenDaysCustomFiles   = array_reverse($lastSevenDaysCustomFiles);
+        $lastSevenDaysCustomFiles = array_reverse($lastSevenDaysCustomFiles);
         $lastSevenDaysBlizzardFiles = array_reverse($lastSevenDaysBlizzardFiles);
 
 

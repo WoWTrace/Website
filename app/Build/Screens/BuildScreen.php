@@ -26,7 +26,7 @@ class BuildScreen extends Screen
         return [
             'build' => Build::query()
                 ->filters()
-                ->defaultSort('build', 'desc')
+                ->defaultSort('clientBuild', 'desc')
                 ->paginate()
         ];
     }

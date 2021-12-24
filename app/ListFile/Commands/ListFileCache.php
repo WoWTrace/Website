@@ -41,7 +41,7 @@ class ListFileCache extends Command
     {
         $this->info('Generate listfile cache with custom data...');
 
-        $startTime       = time();
+        $startTime = time();
         $listFileHandler = fopen(Storage::path(config('listfile.cachePath')), 'wb');
         ListFile::query()->orderBy('id')->each(static function ($entry) use ($listFileHandler) {
             fwrite($listFileHandler, sprintf("%s;%s\n", $entry->id, $entry->path));

@@ -6,7 +6,9 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Orchid\Filters\Filterable;
 use Orchid\Filters\HttpFilter;
@@ -20,12 +22,11 @@ use Orchid\Screen\AsSource;
  * @property string|null $type
  * @property int|null $userId
  * @property string|null $lookup
- * @property string|null $contentHash
- * @property string|null $rootCdnHash
  * @property bool $verified
- * @property bool $encrypted
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Collection|ListFileVersion[] $versions
+ * @property-read int|null $versions_count
  * @method static Builder|ListFile defaultSort(string $column, string $direction = 'asc')
  * @method static Builder|ListFile filters(?HttpFilter $httpFilter = null)
  * @method static Builder|ListFile filtersApply(array $filters = [])
@@ -52,12 +53,14 @@ final class ListFile extends Model
         'rootCdnHash',
         'verified',
         'encrypted',
+        'processed',
     ];
 
     /** @inerhitDoc */
     protected $casts = [
         'verified'   => 'boolean',
         'encrypted'  => 'boolean',
+        'processed'  => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -83,4 +86,9 @@ final class ListFile extends Model
         'path',
         'type'
     ];
+
+    public function versions(): HasMany
+    {
+        return $this->hasMany(ListFileVersion::class, 'id', 'id');
+    }
 }

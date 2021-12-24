@@ -11,7 +11,7 @@ use Orchid\Screen\Actions\Menu;
 final class Platform
 {
     public const ROUTE_HOME_OVERVIEW_SLUG = '/home';
-    public const ROUTE_HOME_OVERVIEW_KEY  = 'platform.home';
+    public const ROUTE_HOME_OVERVIEW_KEY = 'platform.home';
 
     public static function registerMainMenu(): array
     {

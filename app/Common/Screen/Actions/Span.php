@@ -28,7 +28,7 @@ class Span extends Action
      * @var array
      */
     protected $attributes = [
-        'class' => 'btn btn-link',
+        'class' => 'p-2',
         'icon'  => null,
         'turbo' => true,
     ];
