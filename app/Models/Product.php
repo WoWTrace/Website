@@ -25,7 +25,7 @@ use Orchid\Screen\AsSource;
  * @property Carbon|null $detected
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|Build[] $builds
+ * @property-read Collection|\App\Models\Build[] $builds
  * @property-read int|null $builds_count
  * @method static Builder|Product newModelQuery()
  * @method static Builder|Product newQuery()

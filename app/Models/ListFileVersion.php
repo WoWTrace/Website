@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property int $clientBuild
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Build $build
+ * @property-read \App\Models\Build $build
  * @method static Builder|ListFileVersion newModelQuery()
  * @method static Builder|ListFileVersion newQuery()
  * @method static Builder|ListFileVersion query()
@@ -29,7 +29,6 @@ use Illuminate\Support\Carbon;
  */
 final class ListFileVersion extends Model
 {
-
     /** @var string */
     protected $table = 'listfile_version';
 

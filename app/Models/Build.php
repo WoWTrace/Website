@@ -40,9 +40,9 @@ use Orchid\Screen\AsSource;
  * @property string $sizeCdnHash
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Product $product
+ * @property-read \App\Models\Product $product
  * @method static Builder|Build defaultSort(string $column, string $direction = 'asc')
- * @method static Builder|Build filters(?HttpFilter $httpFilter = null)
+ * @method static Builder|Build filters(?\Orchid\Filters\HttpFilter $httpFilter = null)
  * @method static Builder|Build filtersApply(array $filters = [])
  * @method static Builder|Build filtersApplySelection($selection)
  * @method static Builder|Build newModelQuery()

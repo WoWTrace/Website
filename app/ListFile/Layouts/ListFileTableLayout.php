@@ -54,6 +54,13 @@ class ListFileTableLayout extends Table
                     }
                 }),
 
+
+            TDWithColor::make('lookup', __('Lookup'))
+                ->width(145)
+                ->sort()
+                ->defaultHidden()
+                ->filter(Input::make()),
+
             TD::make('versions', __('Versions'))
                 ->width(200)
                 ->sort()
@@ -82,7 +89,7 @@ class ListFileTableLayout extends Table
                         return $span;
                     }
 
-                    $versionList = $listFile->versions->map(static function (ListFileVersion $listFileVersion): Span {
+                    $versionList = $listFile->versions->sortByDesc('clientBuild')->map(static function (ListFileVersion $listFileVersion): Span {
                         $versionBuild = $listFileVersion->build;
 
                         $span = Span::make(sprintf(

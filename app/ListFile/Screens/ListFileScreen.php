@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Screen;
+use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
@@ -47,13 +48,16 @@ class ListFileScreen extends Screen
     public function commandBar(): array
     {
         return [
+            Link::make(__('Suggest names'))
+                ->icon('cloud-upload')
+                ->route(ListFilePlatform::ROUTE_LISTFILE_SUGGEST_KEY)
+                ->canSee(Auth::user()?->hasAccess('listfile.suggest') ?? false),
             ModalToggle::make(__('Add'))
                 ->icon('plus')
                 ->modal('oneAsyncModal')
                 ->modalTitle(__('Add new ListFile entry'))
                 ->method('addListFileEntry')
                 ->canSee(Auth::user()?->hasAccess('listfile.add') ?? false),
-
             Link::make(__('Download'))
                 ->icon('save')
                 ->route('web.listfile.download')
