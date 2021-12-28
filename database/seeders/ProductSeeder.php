@@ -7,7 +7,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
-final class BuildSeeder extends Seeder
+final class ProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
