@@ -75,7 +75,7 @@ class ProcessDBClientFile implements ShouldQueue
     {
         $generatedListFile = [];
         $db2               = $dbClientFileService->open(DBClientFile::Map(), $this->build->productKey);
-        $db2->setFieldNames($db2->fetchColumnNames());
+        $db2->fetchColumnNames();
 
         foreach ($db2->getIds() as $id) {
             $row = $db2->getRecord($id);
@@ -104,7 +104,7 @@ class ProcessDBClientFile implements ShouldQueue
     {
         $generatedListFile = [];
         $db2               = $dbClientFileService->open(DBClientFile::ManifestInterfaceData(), $this->build->productKey);
-        $db2->setFieldNames($db2->fetchColumnNames());
+        $db2->fetchColumnNames();
 
         foreach ($db2->getIds() as $id) {
             $row = $db2->getRecord($id);
@@ -127,7 +127,7 @@ class ProcessDBClientFile implements ShouldQueue
     {
         $generatedListFile = [];
         $db2               = $dbClientFileService->open(DBClientFile::ManifestInterfaceTOCData(), $this->build->productKey);
-        $db2->setFieldNames($db2->fetchColumnNames());
+        $db2->fetchColumnNames();
 
         foreach ($db2->getIds() as $id) {
             $row = $db2->getRecord($id);

@@ -27,8 +27,6 @@ final class DBClientFileDownload extends Command
             return Command::FAILURE;
         }
 
-        ProcessDBClientFile::dispatch(Build::firstWhere('id', 1));
-
         $this->dbClientFileService = $dbClientFileService;
         $dbClientFileSelect        = $this->argument('dbClientFileSelect');
         $product                   = $this->argument('product');
