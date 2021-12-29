@@ -62,7 +62,7 @@ class ProcessDBClientFile implements ShouldQueue
                 ];
             }
 
-            ListFile::upsert($queryBuffer, ['id'], ['path', 'type', 'verified']);
+            ListFile::upsert($queryBuffer, ['id', 'path'], ['path', 'type', 'verified']);
         }
     }
 
