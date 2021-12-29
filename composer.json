@@ -12,12 +12,14 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "darkaonline/l5-swagger": "^8.0",
+        "erorus/db2": "dev-master",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.70",
         "laravel/tinker": "^2.6",
         "luzifix/casc": "dev-master",
+        "myclabs/php-enum": "^1.8",
         "orchid/platform": "^10.26",
         "symfony/http-foundation": "^5.2",
         "symfony/http-kernel": "^5.2"
@@ -60,6 +62,10 @@
         {
             "url": "https://github.com/Luzifix/casc.git",
             "type": "git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/erorus/db2"
         }
     ],
     "minimum-stability": "dev",

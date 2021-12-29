@@ -5,22 +5,32 @@ namespace App\Common\Services;
 
 
 use App\Common\Exceptions\TactException;
+use Erorus\CASC\BLTE;
 use Erorus\CASC\Cache;
 use Erorus\CASC\Config;
+use Erorus\CASC\DataSource\TACT;
 use Erorus\CASC\Encoding;
 use Erorus\CASC\Encoding\ContentMap;
+use Erorus\CASC\HTTP;
+use Erorus\CASC\Manifest;
+use Erorus\CASC\Manifest\Root;
 use Erorus\CASC\VersionConfig\HTTP as HTTPVersionConfig;
+use Exception;
 use Throwable;
 
 final class TactService
 {
-    public const DEFAULT_REGION = 'eu';
+    public const DEFAULT_REGION       = 'eu';
+    public const DEFAULT_TACT_KEY_URL = 'https://raw.githubusercontent.com/wowdev/TACTKeys/master/WoW.txt';
 
     /** @var array<string, HTTPVersionConfig> */
     private static array $versionConfigs = [];
 
     /** @var array<string, Encoding> */
     private static array $encodings = [];
+
+    /** @var array<string, TACT> */
+    private static array $tact = [];
 
     public function __construct(private Cache $cache)
     {
@@ -89,7 +99,7 @@ final class TactService
         return self::$versionConfigs[$cacheKey] = $versionConfig;
     }
 
-    public function getBuildConfig(string $product, string $region = self::DEFAULT_REGION)
+    public function getBuildConfig(string $product, string $region = self::DEFAULT_REGION): Config
     {
         $versionConfig = $this->getVersionConfig($product, $region);
         $buildConfig   = new Config($this->cache, $versionConfig->getServers(), $versionConfig->getCDNPath(), $versionConfig->getBuildConfig());
@@ -99,5 +109,143 @@ final class TactService
         }
 
         return $buildConfig;
+    }
+
+    public function downloadFileByNameOrId(string $nameOrId, string $destPath, string $product, string $region = self::DEFAULT_REGION, ?string $locale = null): bool
+    {
+        $contentHash = $this->getContentHash($nameOrId, $product, $region, $locale);
+
+        if (is_null($contentHash)) {
+            return false;
+        }
+
+        $contentHash = bin2hex($contentHash);
+
+        if (file_exists($destPath) && md5_file($destPath) === $contentHash) {
+            return true;
+        }
+
+        return $this->downloadFileByContentHash($contentHash, $destPath, $product, $region);
+    }
+
+    public function getContentHash(string $nameOrId, string $product, string $region = self::DEFAULT_REGION, ?string $locale = null): ?string
+    {
+        /** @var Manifest[] $nameSources */
+        $nameSources = [
+            $this->getRoot($product, $region)
+        ];
+
+        $contentHash = null;
+        foreach ($nameSources as $nameSource) {
+            if ($contentHash = $nameSource->getContentHash($nameOrId, $locale)) {
+                break;
+            }
+        }
+
+        return $contentHash;
+    }
+
+    private function getRoot(string $product, string $region = self::DEFAULT_REGION): Root
+    {
+        $versionConfig       = $this->getVersionConfig($product, $region);
+        $buildConfig         = $this->getBuildConfig($product, $region);
+        $rootEncodingMapping = $this->getEncodingContentMap($buildConfig->getByKey('root')[0], $product, $region);
+
+        if (!$rootEncodingMapping) {
+            throw new TactException(sprintf("Cant get root cdn key for product %s", $product));
+        }
+
+        try {
+            $root = new Root(
+                $this->cache,
+                $versionConfig->getServers(),
+                $versionConfig->getCDNPath(),
+                bin2hex($rootEncodingMapping->getEncodedHashes()[0])
+            );
+        } catch (Throwable $throwable) {
+            throw new TactException(sprintf("Failed to download root for product %s\n%s", $product, $throwable->getMessage()));
+        }
+
+        return $root;
+    }
+
+    private function downloadFileByContentHash(string $contentHash, string $destPath, string $product, string $region = self::DEFAULT_REGION): bool
+    {
+        $contentMap = $this->getEncodingContentMap($contentHash, $product, $region);
+        if (!$contentMap) {
+            return false;
+        }
+
+        $dataSource = $this->getTact($product, $region);
+
+        foreach ($contentMap->getEncodedHashes() as $hash) {
+            try {
+                if ($location = $dataSource->findHashInIndexes($hash)) {
+                    if ($dataSource->extractFile($location, $destPath, $contentHash)) {
+                        return true;
+                    }
+                }
+            } catch (Exception) {
+                //
+            }
+        }
+
+        return false;
+    }
+
+    public function getTact(string $product, string $region = self::DEFAULT_REGION): TACT
+    {
+        $cacheKey = sprintf('%s-%s', $product, $region);
+        if (!empty(self::$tact[$cacheKey])) {
+            return self::$tact[$cacheKey];
+        }
+
+        $versionConfig = $this->getVersionConfig($product, $region);
+        $cdnConfig     = $this->getCdnConfig($product, $region);
+        $this->downloadTactKeys();
+
+        return self::$tact[$cacheKey] = new TACT(
+            $this->cache,
+            $versionConfig->getServers(),
+            $versionConfig->getCDNPath(),
+            $cdnConfig->archives
+        );
+    }
+
+    public function getCdnConfig(string $product, string $region = self::DEFAULT_REGION): Config
+    {
+        $versionConfig = $this->getVersionConfig($product, $region);
+        $cdnConfig     = new Config($this->cache, $versionConfig->getServers(), $versionConfig->getCDNPath(), $versionConfig->getCDNConfig());
+
+        if (empty($cdnConfig->getByKey('archives'))) {
+            throw new TactException(sprintf('Skip build %s in product %s because it is encrypted', $versionConfig->getBuildConfig(), $product));
+        }
+
+        return $cdnConfig;
+    }
+
+    private function downloadTactKeys(): int
+    {
+        $keys = [];
+        try {
+            $list = HTTP::get(env('TACT_KEY_SOURCE_URL', self::DEFAULT_TACT_KEY_URL));
+        } catch (Exception $e) {
+            echo $e->getMessage(), "\n";
+
+            return 0;
+        }
+
+        $lines = explode("\n", $list);
+        foreach ($lines as $line) {
+            if (preg_match('/([0-9A-F]{16})\s+([0-9A-F]{32})/i', $line, $match)) {
+                $keys[strrev(hex2bin($match[1]))] = hex2bin($match[2]);
+            }
+        }
+
+        if ($keys) {
+            BLTE::loadEncryptionKeys($keys);
+        }
+
+        return count($keys);
     }
 }

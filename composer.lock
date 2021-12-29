@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d14a733f8165c01fc71cde55a8c4fb2",
+    "content-hash": "567410d45a454100752b198d12b2828b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -647,6 +647,49 @@
                 }
             ],
             "time": "2020-12-29T14:50:06+00:00"
+        },
+        {
+            "name": "erorus/db2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/erorus/db2.git",
+                "reference": "d303559180e8465a2c6d04fd0bfa0631edd2d0b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/erorus/db2/zipball/d303559180e8465a2c6d04fd0bfa0631edd2d0b8",
+                "reference": "d303559180e8465a2c6d04fd0bfa0631edd2d0b8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-gmp": "*",
+                "ext-mbstring": "*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Erorus\\DB2\\": "src/Erorus/DB2/"
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Erorus",
+                    "email": "github@theunderminejournal.com"
+                }
+            ],
+            "description": "DB2 Reader for World of Warcraft data files",
+            "homepage": "https://github.com/erorus/db2",
+            "support": {
+                "source": "https://github.com/erorus/db2/tree/master",
+                "issues": "https://github.com/erorus/db2/issues"
+            },
+            "time": "2020-12-09T01:30:17+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -1880,7 +1923,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Luzifix/casc.git",
-                "reference": "bce8764de5934cef503036758105c2f9ae048a58"
+                "reference": "4f36a1b3144bef2df64436fa5ca406c638fcfcde"
             },
             "require": {
                 "ext-curl": "*",
@@ -1905,7 +1948,7 @@
                 }
             ],
             "description": "CASC extractor for World of Warcraft data",
-            "time": "2021-12-20T06:59:54+00:00"
+            "time": "2021-12-29T00:31:07+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -10833,6 +10876,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "erorus/db2": 20,
         "luzifix/casc": 20,
         "roave/security-advisories": 20
     },
@@ -10847,5 +10891,5 @@
         "ext-pdo_mysql": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }

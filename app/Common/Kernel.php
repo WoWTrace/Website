@@ -13,9 +13,6 @@ class Kernel extends ConsoleKernel
     {
         // Builds
         $schedule->command('build:crawl')->everyTenMinutes();
-
-        // Clean
-        $schedule->command('tact:clean-cache')->daily()->withoutOverlapping();
     }
 
     protected function commands(): void
@@ -25,6 +22,7 @@ class Kernel extends ConsoleKernel
             __DIR__ . '/../Home/Commands',
             __DIR__ . '/../ListFile/Commands',
             __DIR__ . '/../Build/Commands',
+            __DIR__ . '/../DBClientFile/Commands',
         ]);
     }
 }

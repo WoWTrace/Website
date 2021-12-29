@@ -80,6 +80,8 @@ class ProcessRoot implements ShouldQueue
         }
 
         unset($queryList);
+
+        ProcessDBClientFile::dispatch($this->build);
     }
 
     private function getRoot(Cache $cache): Root
