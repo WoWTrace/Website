@@ -22,7 +22,7 @@ if (Breadcrumbs::has()) {
 }
 
 $title = config('app.name');
-$description = $description ?: 'WoWTrace shows data from World of Warcraft in a clear form and help with data mining.';
+$description = $description ?? 'WoWTrace shows data from World of Warcraft in a clear form and help with data mining.';
 if (!empty($name) && $name !== $title) {
     $title = sprintf('%s - %s', $name, $title);
 }

@@ -24,6 +24,7 @@
                 @include('platform::partials.search')
 
                 @includeWhen(Auth::check(), 'platform::partials.profile')
+                @includeWhen(!Auth::check(), 'partials.loginOrRegister')
 
                 <ul class="nav flex-column mb-1">
                     {!! Dashboard::renderMenu(\Orchid\Platform\Dashboard::MENU_MAIN) !!}

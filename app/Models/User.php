@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Support\Carbon;
-use Orchid\Filters\HttpFilter;
 use Orchid\Platform\Models\Role;
 use Orchid\Platform\Models\User as Authenticatable;
 

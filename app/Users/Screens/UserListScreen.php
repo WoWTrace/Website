@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Users\Screens;
 
+use App\Common\Screen\Screen;
 use App\Users\Layouts\UserEditLayout;
 use App\Users\Layouts\UserFiltersLayout;
 use App\Users\Layouts\UserListLayout;
@@ -11,7 +12,6 @@ use Illuminate\Http\Request;
 use Orchid\Platform\Models\User;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Link;
-use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 use function __;

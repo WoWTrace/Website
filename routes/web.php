@@ -16,6 +16,7 @@ $router->group(
         $router->group(
             ['middleware' => ['web']],
             static function (Router $router): void {
+                App\Auth\Routes::registerWeb($router);
                 App\ListFile\Routes::registerWeb($router);
             }
         );

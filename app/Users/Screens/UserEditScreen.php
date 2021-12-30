@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Users\Screens;
 
+use App\Common\Screen\Screen;
 use App\Roles\Layouts\RolePermissionLayout;
 use App\Users\Layouts\UserEditLayout;
 use App\Users\Layouts\UserPasswordLayout;
@@ -17,7 +18,6 @@ use Orchid\Access\UserSwitch;
 use Orchid\Platform\Models\User;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Screen;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
