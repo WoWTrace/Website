@@ -15,12 +15,13 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(
             function (RouteRegistrar $webRouter, RouteRegistrar $apiRouter, Application $application) {
                 $webRouter
+                    ->domain(env('APP_DOMAIN', 'localhost'))
                     ->as('web.')
                     ->middleware('web')
                     ->group($application->basePath('routes/web.php'));
 
                 $apiRouter
-                    ->prefix('api')
+                    ->domain(env('API_DOMAIN', 'localhost'))
                     ->middleware('api')
                     ->group($application->basePath('routes/api.v1.php'));
             }

@@ -1,4 +1,4 @@
-# WIP: WoWData.tools
+# WIP: WoWTrace
 
 ## Setup
 1. Copy .env.example to .env

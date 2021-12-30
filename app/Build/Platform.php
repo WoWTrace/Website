@@ -37,6 +37,7 @@ final class Platform
     public static function registerScreens(): void
     {
         Route::screen(self::ROUTE_BUILDS_OVERVIEW_SLUG, BuildScreen::class)
+            ->domain(env('APP_DOMAIN', 'localhost'))
             ->name(self::ROUTE_BUILDS_OVERVIEW_KEY)
             ->breadcrumbs(function (Trail $trail) {
                 return $trail

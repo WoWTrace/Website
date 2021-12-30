@@ -42,6 +42,7 @@ final class Platform
     public static function registerScreens(): void
     {
         Route::screen(self::ROUTE_LISTFILE_OVERVIEW_SLUG, ListFileScreen::class)
+            ->domain(env('APP_DOMAIN', 'localhost'))
             ->name(self::ROUTE_LISTFILE_OVERVIEW_KEY)
             ->breadcrumbs(function (Trail $trail) {
                 return $trail
@@ -51,6 +52,7 @@ final class Platform
             });
 
         Route::screen(self::ROUTE_LISTFILE_SUGGEST_SLUG, SuggestListFileScreen::class)
+            ->domain(env('APP_DOMAIN', 'localhost'))
             ->name(self::ROUTE_LISTFILE_SUGGEST_KEY)
             ->middleware(['permission:listfile.suggest'])
             ->breadcrumbs(function (Trail $trail) {

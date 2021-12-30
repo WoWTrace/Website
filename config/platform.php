@@ -19,7 +19,7 @@ return [
     |
     */
 
-    'domain' => env('DASHBOARD_DOMAIN', null),
+    'domain' => env('APP_DOMAIN', null),
 
     /*
     |--------------------------------------------------------------------------

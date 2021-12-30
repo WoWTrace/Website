@@ -12,7 +12,7 @@ final class ListFileDownload
 {
     /**
      * @OA\Get(
-     *     path="/api/v1/listfile/download",
+     *     path="/v1/listfile/download",
      *     summary="Download full listfile",
      *     tags={"ListFile"},
      *     @OA\Response(

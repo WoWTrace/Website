@@ -13,7 +13,7 @@ final class ListFileGetByPath
 {
     /**
      * @OA\Post(
-     *     path="/api/v1/listfile/getByPath",
+     *     path="/v1/listfile/getByPath",
      *     summary="Get listfile entry by path",
      *     tags={"ListFile"},
      *     @OA\RequestBody(

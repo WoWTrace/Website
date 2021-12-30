@@ -26,6 +26,7 @@ final class Platform
     public static function registerScreens(): void
     {
         Route::screen(self::ROUTE_HOME_OVERVIEW_SLUG, HomeScreen::class)
+            ->domain(env('APP_DOMAIN', 'localhost'))
             ->name(self::ROUTE_HOME_OVERVIEW_KEY);
     }
 }

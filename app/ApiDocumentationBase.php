@@ -2,12 +2,12 @@
 
 /**
  * @OA\Info(
- *     description="Here you can find all available [WoWData.tools](/) api endpoints. Some endpoints need special permissions or are not usable for normal users.",
+ *     description="Here you can find all available [WoWTrace.net](/) api endpoints. Some endpoints need special permissions or are not usable for normal users.",
  *     version="1.0.0",
- *     title="WoWData.tools API",
+ *     title="WoWTrace API",
  *     @OA\License(
  *         name="GPL-3.0 License",
- *         url="https://github.com/Luzifix/wowdata.tools/LICENSE"
+ *         url="https://github.com/Luzifix/wowtrace/LICENSE"
  *     )
  * )
  * @OA\Tag(
@@ -18,6 +18,5 @@
  *         url="/listfile"
  *     )
  * )
- * @OA\Server(url="http://127.0.0.1:8000/")
- * @OA\Server(url="https://wowdata.tools/")
+ * @OA\Server(url="https://api.wowtrace.net/")
  */

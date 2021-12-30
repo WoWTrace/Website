@@ -1,18 +1,16 @@
 <?php
 
 return [
-    'default'        => 'default',
+    'default'        => 'defaults',
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'WoWData.tools API',
+                'title' => 'WoWTrace API',
             ],
 
             'routes' => [
-                /*
-                 * Route for accessing api documentation interface
-                */
-                'api' => 'api/documentation',
+                'domain' => env('API_DOMAIN', 'localhost'),
+                'api'    => (in_array(env('API_DOMAIN'), [null, 'localhost']) ? 'documentation' : '/'),
             ],
             'paths'  => [
                 /*
@@ -70,7 +68,7 @@ return [
             /*
              * Route Group options
             */
-            'group_options'   => [],
+            'group_options'   => ['domain' => env('API_DOMAIN', 'localhost')],
         ],
 
         'paths' => [
@@ -150,7 +148,7 @@ return [
                 'basicAuth' => [
                     'type'        => 'http',
                     'scheme'      => 'basic',
-                    'description' => 'The username is your wowdata.tools email address',
+                    'description' => 'The username is your WoWTrace email address',
                 ],
             ],
             'security'        => [
@@ -204,8 +202,8 @@ return [
         /*
          * Uncomment to add constants which can be used in annotations
          */
-        // 'constants' => [
-        // 'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
-        // ],
+        'constants'             => [
+            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+        ],
     ],
 ];

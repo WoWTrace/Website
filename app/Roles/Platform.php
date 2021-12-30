@@ -37,6 +37,7 @@ final class Platform
     {
         // Platform > System > Roles > Role
         Route::screen('roles/{roles}/edit', RoleEditScreen::class)
+            ->domain(env('APP_DOMAIN', 'localhost'))
             ->name('platform.systems.roles.edit')
             ->breadcrumbs(function (Trail $trail, $role) {
                 return $trail
@@ -46,6 +47,7 @@ final class Platform
 
         // Platform > System > Roles > Create
         Route::screen('roles/create', RoleEditScreen::class)
+            ->domain(env('APP_DOMAIN', 'localhost'))
             ->name('platform.systems.roles.create')
             ->breadcrumbs(function (Trail $trail) {
                 return $trail
@@ -55,6 +57,7 @@ final class Platform
 
         // Platform > System > Roles
         Route::screen('roles', RoleListScreen::class)
+            ->domain(env('APP_DOMAIN', 'localhost'))
             ->name('platform.systems.roles')
             ->breadcrumbs(function (Trail $trail) {
                 return $trail
