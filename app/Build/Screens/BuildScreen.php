@@ -4,8 +4,8 @@ namespace App\Build\Screens;
 
 use App\Build\Layouts\BuildTableLayout;
 use App\Build\Layouts\DetailModalLayout;
+use App\Common\Screen\Screen;
 use App\Models\Build;
-use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 
 class BuildScreen extends Screen

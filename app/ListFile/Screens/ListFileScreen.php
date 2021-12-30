@@ -2,6 +2,7 @@
 
 namespace App\ListFile\Screens;
 
+use App\Common\Screen\Screen;
 use App\ListFile\Layouts\ListFileAddLayout;
 use App\ListFile\Layouts\ListFileTableLayout;
 use App\ListFile\Platform as ListFilePlatform;
@@ -11,8 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Actions\ModalToggle;
-use Orchid\Screen\Screen;
-use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 

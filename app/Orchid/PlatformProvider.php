@@ -9,6 +9,7 @@ use App\Home;
 use App\ListFile;
 use App\Roles;
 use App\Users;
+use Illuminate\Support\Facades\View;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\OrchidServiceProvider;
 use Orchid\Screen\Actions\Menu;
@@ -20,7 +21,22 @@ class PlatformProvider extends OrchidServiceProvider
      */
     public function boot(Dashboard $dashboard): void
     {
-        parent::boot($dashboard);
+        View::composer('dashboard', function () use ($dashboard) {
+            foreach ($this->registerMainMenu() as $element) {
+                $dashboard->registerMenuElement(Dashboard::MENU_MAIN, $element);
+            }
+
+            foreach ($this->registerProfileMenu() as $element) {
+                $dashboard->registerMenuElement(Dashboard::MENU_PROFILE, $element);
+            }
+        });
+
+        foreach ($this->registerPermissions() as $permission) {
+            $dashboard->registerPermissions($permission);
+        }
+
+        $dashboard->registerSearch($this->registerSearchModels());
+
         ListFile\Platform::boot($dashboard);
         Build\Platform::boot($dashboard);
         Users\Platform::boot($dashboard);

@@ -1,41 +1,51 @@
 <?php
+/**
+ * @var ?string $name
+ * @var ?string $description
+ */
+
 if (Breadcrumbs::has()) {
     $position    = 1;
     $breadcrumbs = [];
     foreach (Breadcrumbs::current() as $breadcrumb) {
+        if (empty($breadcrumb->url())) {
+            continue;
+        }
+
         $breadcrumbs[] = [
             '@type'    => 'ListItem',
             'position' => $position++,
             'name'     => $breadcrumb->title(),
-            'item'     => $breadcrumb->url() ?? '',
+            'item'     => $breadcrumb->url(),
         ];
     }
 }
-?>
 
+$title = config('app.name');
+$description = $description ?: 'WoWTrace shows data from World of Warcraft in a clear form and help with data mining.';
+if (!empty($name) && $name !== $title) {
+    $title = sprintf('%s - %s', $name, $title);
+}
+?>
 @push('head')
     <!-- Primary Meta Tags -->
-    <meta name="description"
-          content="WoWTrace shows data from World of Warcraft in a clear form and help with data mining.">
+    <meta name="description" content="{{$description}}">
     <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'/>
     <meta name="format-detection" content="telephone=no">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{env('APP_URL', 'localhost')}}">
-    <meta property="og:title"
-          content="@yield('title', config('app.name')) @hasSection('title') - {{ config('app.name') }} @endif">
-    <meta property="og:description"
-          content="WoWTrace shows data from World of Warcraft in a clear form and help with data mining.">
+    <meta property="og:title" content="{{$title}}">
+    <meta property="og:site_name" content="{{config('app.name')}}">
+    <meta property="og:description" content="{{$description}}">
     <meta property="og:image" content="/resources/image/logo.png">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:card" content="summary">
     <meta property="twitter:url" content="{{env('APP_URL', 'localhost')}}">
-    <meta property="twitter:title"
-          content="@yield('title', config('app.name')) @hasSection('title') - {{ config('app.name') }} @endif">
-    <meta property="twitter:description"
-          content="WoWTrace shows data from World of Warcraft in a clear form and help with data mining.">
+    <meta property="twitter:title"{{$title}}">
+    <meta property="twitter:description" content="{{$description}}">
     <meta property="twitter:image" content="/resources/image/logo.png">
 
     <!-- Favicon -->
@@ -59,7 +69,7 @@ if (Breadcrumbs::has()) {
       "@type": "ResearchProject",
       "name": "WoWTrace",
       "url": "{{env('APP_URL', 'localhost')}}",
-      "logo": "{{env('APP_URL', 'localhost')}}resources/image/logo.png",
+      "logo": "{{trim(env('APP_URL', 'localhost'), '/')}}/resources/image/logo.png",
       "sameAs": "https://github.com/Luzifix/wowtrace"
     }
     </script>

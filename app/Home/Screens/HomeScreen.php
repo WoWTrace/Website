@@ -2,10 +2,10 @@
 
 namespace App\Home\Screens;
 
+use App\Common\Screen\Screen;
 use App\Home\Layouts\ProductEntries;
 use Orchid\Screen\Action;
 use Orchid\Screen\Layout;
-use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout as OrchidLayout;
 use Throwable;
 

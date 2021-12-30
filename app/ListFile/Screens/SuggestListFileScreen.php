@@ -2,6 +2,7 @@
 
 namespace App\ListFile\Screens;
 
+use App\Common\Screen\Screen;
 use App\ListFile\Layouts\Suggest\SuggestTextBoxLayout;
 use App\ListFile\Platform as ListFilePlatform;
 use App\ListFile\Services\ListFileService;
@@ -9,14 +10,11 @@ use App\Models\ListFileSuggestion;
 use App\Rules\CsvValidation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Orchid\Platform\Models\User;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
-use Orchid\Screen\Screen;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
-use Symfony\Component\HttpFoundation\Response;
 
 class SuggestListFileScreen extends Screen
 {
