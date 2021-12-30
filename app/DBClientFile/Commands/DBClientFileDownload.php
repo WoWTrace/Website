@@ -5,6 +5,8 @@ namespace App\DBClientFile\Commands;
 
 use App\DBClientFile\Services\DBClientFileService;
 use App\DBClientFile\Support\DBClientFile;
+use App\Jobs\ProcessDBClientFile;
+use App\Models\Build;
 use Illuminate\Console\Command;
 
 final class DBClientFileDownload extends Command
@@ -24,6 +26,9 @@ final class DBClientFileDownload extends Command
             $this->error('This command only works under linux!');
             return Command::FAILURE;
         }
+
+        ProcessDBClientFile::dispatchSync(Build::first());
+        return 0;
 
         $this->dbClientFileService = $dbClientFileService;
         $dbClientFileSelect        = $this->argument('dbClientFileSelect');

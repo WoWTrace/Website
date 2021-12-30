@@ -1,2 +1,3 @@
 User-agent: *
-Disallow:
+Disallow: /v1
+Disallow: /async
