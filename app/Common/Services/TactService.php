@@ -5,6 +5,7 @@ namespace App\Common\Services;
 
 
 use App\Common\Exceptions\TactException;
+use Carbon\CarbonInterface;
 use Erorus\CASC\BLTE;
 use Erorus\CASC\Cache;
 use Erorus\CASC\Config;
@@ -13,24 +14,17 @@ use Erorus\CASC\Encoding;
 use Erorus\CASC\Encoding\ContentMap;
 use Erorus\CASC\HTTP;
 use Erorus\CASC\Manifest;
+use Erorus\CASC\Manifest\Install;
 use Erorus\CASC\Manifest\Root;
 use Erorus\CASC\VersionConfig\HTTP as HTTPVersionConfig;
 use Exception;
+use Illuminate\Support\Facades\Cache as LaravelCache;
 use Throwable;
 
 final class TactService
 {
     public const DEFAULT_REGION       = 'eu';
     public const DEFAULT_TACT_KEY_URL = 'https://raw.githubusercontent.com/wowdev/TACTKeys/master/WoW.txt';
-
-    /** @var array<string, HTTPVersionConfig> */
-    private static array $versionConfigs = [];
-
-    /** @var array<string, Encoding> */
-    private static array $encodings = [];
-
-    /** @var array<string, TACT> */
-    private static array $tact = [];
 
     public function __construct(private Cache $cache)
     {
@@ -56,59 +50,55 @@ final class TactService
 
     public function getEncoding(string $product, string $region = self::DEFAULT_REGION): Encoding
     {
-        $cacheKey = sprintf('%s-%s', $product, $region);
-        if (!empty(self::$encodings[$cacheKey])) {
-            return self::$encodings[$cacheKey];
-        }
+        return LaravelCache::get(sprintf('tact-encoding-%s-%s', $product, $region), function () use ($product, $region): Encoding {
+            $versionConfig = $this->getVersionConfig($product, $region);
+            $buildConfig   = $this->getBuildConfig($product, $region);
 
-        $versionConfig = $this->getVersionConfig($product, $region);
-        $buildConfig   = $this->getBuildConfig($product, $region);
+            try {
+                $encoding = new Encoding(
+                    $this->cache,
+                    $versionConfig->getServers(),
+                    $versionConfig->getCDNPath(),
+                    $buildConfig->encoding[1],
+                    true
+                );
+            } catch (Throwable $throwable) {
+                throw new TactException(sprintf("Failed to download encoding for product %s\n%s", $product, $throwable->getMessage()));
+            }
 
-        try {
-            $encoding = new Encoding(
-                $this->cache,
-                $versionConfig->getServers(),
-                $versionConfig->getCDNPath(),
-                $buildConfig->encoding[1],
-                true
-            );
-        } catch (Throwable $throwable) {
-            throw new TactException(sprintf("Failed to download encoding for product %s\n%s", $product, $throwable->getMessage()));
-        }
-
-        return self::$encodings[$cacheKey] = $encoding;
+            return $encoding;
+        });
     }
 
     public function getVersionConfig(string $product, string $region = self::DEFAULT_REGION): HTTPVersionConfig
     {
-        $cacheKey = sprintf('%s-%s', $product, $region);
-        if (!empty(self::$versionConfigs[$cacheKey])) {
-            return self::$versionConfigs[$cacheKey];
-        }
+        return LaravelCache::remember(sprintf('tact-versionConfig-%s-%s', $product, $region), 2 * CarbonInterface::SECONDS_PER_MINUTE, function () use ($product, $region): HTTPVersionConfig {
+            $versionConfig = new HTTPVersionConfig($this->cache, $product, $region);
 
-        $versionConfig = new HTTPVersionConfig($this->cache, $product, $region);
+            $version         = $versionConfig->getVersion();
+            $buildConfigHash = $versionConfig->getBuildConfig();
+            $cdnConfigHash   = $versionConfig->getCDNConfig();
 
-        $version         = $versionConfig->getVersion();
-        $buildConfigHash = $versionConfig->getBuildConfig();
-        $cdnConfigHash   = $versionConfig->getCDNConfig();
+            if (empty($version) || empty($buildConfigHash) || empty($cdnConfigHash)) {
+                throw new TactException(sprintf('Versions file product %s is empty', $product));
+            }
 
-        if (empty($version) || empty($buildConfigHash) || empty($cdnConfigHash)) {
-            throw new TactException(sprintf('Versions file product %s is empty', $product));
-        }
-
-        return self::$versionConfigs[$cacheKey] = $versionConfig;
+            return $versionConfig;
+        });
     }
 
     public function getBuildConfig(string $product, string $region = self::DEFAULT_REGION): Config
     {
-        $versionConfig = $this->getVersionConfig($product, $region);
-        $buildConfig   = new Config($this->cache, $versionConfig->getServers(), $versionConfig->getCDNPath(), $versionConfig->getBuildConfig());
+        return LaravelCache::remember(sprintf('tact-buildconfig-%s-%s', $product, $region), 60 * CarbonInterface::SECONDS_PER_MINUTE, function () use ($product, $region): Config {
+            $versionConfig = $this->getVersionConfig($product, $region);
+            $buildConfig   = new Config($this->cache, $versionConfig->getServers(), $versionConfig->getCDNPath(), $versionConfig->getBuildConfig());
 
-        if (empty($buildConfig->getByKey('encoding'))) {
-            throw new TactException(sprintf('Skip build %s in product %s because it is encrypted', $versionConfig->getBuildConfig(), $product));
-        }
+            if (empty($buildConfig->getByKey('encoding'))) {
+                throw new TactException(sprintf('Skip build %s in product %s because it is encrypted', $versionConfig->getBuildConfig(), $product));
+            }
 
-        return $buildConfig;
+            return $buildConfig;
+        });
     }
 
     public function downloadFileByNameOrId(string $nameOrId, string $destPath, string $product, string $region = self::DEFAULT_REGION, ?string $locale = null): bool
@@ -132,8 +122,11 @@ final class TactService
     {
         /** @var Manifest[] $nameSources */
         $nameSources = [
-            $this->getRoot($product, $region)
+            $this->getInstall($product, $region),
+            $this->getRoot($product, $region),
         ];
+
+        $this->downloadTactKeys();
 
         $contentHash = null;
         foreach ($nameSources as $nameSource) {
@@ -145,28 +138,85 @@ final class TactService
         return $contentHash;
     }
 
+    private function getInstall(string $product, string $region = self::DEFAULT_REGION): Install
+    {
+        return LaravelCache::remember(sprintf('tact-install-%s-%s', $product, $region), 60 * CarbonInterface::SECONDS_PER_MINUTE, function () use ($product, $region): Install {
+            $versionConfig = $this->getVersionConfig($product, $region);
+            $buildConfig   = $this->getBuildConfig($product, $region);
+
+            if (empty($buildConfig->getByKey('install')[1])) {
+                throw new TactException(sprintf("Cant get install cdn key for product %s", $product));
+            }
+
+            try {
+                $install = new Install(
+                    $this->cache,
+                    $versionConfig->getServers(),
+                    $versionConfig->getCDNPath(),
+                    $buildConfig->getByKey('install')[1]
+                );
+            } catch (Throwable $throwable) {
+                throw new TactException(sprintf("Failed to download root for product %s\n%s", $product, $throwable->getMessage()));
+            }
+
+            return $install;
+        });
+    }
+
     private function getRoot(string $product, string $region = self::DEFAULT_REGION): Root
     {
-        $versionConfig       = $this->getVersionConfig($product, $region);
-        $buildConfig         = $this->getBuildConfig($product, $region);
-        $rootEncodingMapping = $this->getEncodingContentMap($buildConfig->getByKey('root')[0], $product, $region);
+        return LaravelCache::get(sprintf('tact-root-%s-%s', $product, $region), function () use ($product, $region): Root {
+            $versionConfig       = $this->getVersionConfig($product, $region);
+            $buildConfig         = $this->getBuildConfig($product, $region);
+            $rootEncodingMapping = $this->getEncodingContentMap($buildConfig->getByKey('root')[0], $product, $region);
 
-        if (!$rootEncodingMapping) {
-            throw new TactException(sprintf("Cant get root cdn key for product %s", $product));
+            if (!$rootEncodingMapping) {
+                throw new TactException(sprintf("Cant get root cdn key for product %s", $product));
+            }
+
+            try {
+                $root = new Root(
+                    $this->cache,
+                    $versionConfig->getServers(),
+                    $versionConfig->getCDNPath(),
+                    bin2hex($rootEncodingMapping->getEncodedHashes()[0])
+                );
+            } catch (Throwable $throwable) {
+                throw new TactException(sprintf("Failed to download root for product %s\n%s", $product, $throwable->getMessage()));
+            }
+
+            return $root;
+        });
+    }
+
+    private function downloadTactKeys(): int
+    {
+        $keys = LaravelCache::remember('tact-encryptionKeys', 60 * CarbonInterface::SECONDS_PER_MINUTE, static function (): array {
+            $keys = [];
+
+            try {
+                $list = HTTP::get(env('TACT_KEY_SOURCE_URL', self::DEFAULT_TACT_KEY_URL));
+            } catch (Exception $e) {
+                echo $e->getMessage(), "\n";
+
+                return [];
+            }
+
+            $lines = explode("\n", $list);
+            foreach ($lines as $line) {
+                if (preg_match('/([0-9A-F]{16})\s+([0-9A-F]{32})/i', $line, $match)) {
+                    $keys[strrev(hex2bin($match[1]))] = hex2bin($match[2]);
+                }
+            }
+
+            return $keys;
+        });
+
+        if ($keys) {
+            BLTE::loadEncryptionKeys($keys);
         }
 
-        try {
-            $root = new Root(
-                $this->cache,
-                $versionConfig->getServers(),
-                $versionConfig->getCDNPath(),
-                bin2hex($rootEncodingMapping->getEncodedHashes()[0])
-            );
-        } catch (Throwable $throwable) {
-            throw new TactException(sprintf("Failed to download root for product %s\n%s", $product, $throwable->getMessage()));
-        }
-
-        return $root;
+        return count($keys);
     }
 
     private function downloadFileByContentHash(string $contentHash, string $destPath, string $product, string $region = self::DEFAULT_REGION): bool
@@ -181,7 +231,7 @@ final class TactService
         foreach ($contentMap->getEncodedHashes() as $hash) {
             try {
                 if ($location = $dataSource->findHashInIndexes($hash)) {
-                    if ($dataSource->extractFile($location, $destPath, $contentHash)) {
+                    if ($dataSource->extractFile($location, $destPath)) {
                         return true;
                     }
                 }
@@ -195,16 +245,11 @@ final class TactService
 
     public function getTact(string $product, string $region = self::DEFAULT_REGION): TACT
     {
-        $cacheKey = sprintf('%s-%s', $product, $region);
-        if (!empty(self::$tact[$cacheKey])) {
-            return self::$tact[$cacheKey];
-        }
-
         $versionConfig = $this->getVersionConfig($product, $region);
         $cdnConfig     = $this->getCdnConfig($product, $region);
         $this->downloadTactKeys();
 
-        return self::$tact[$cacheKey] = new TACT(
+        return new TACT(
             $this->cache,
             $versionConfig->getServers(),
             $versionConfig->getCDNPath(),
@@ -214,38 +259,15 @@ final class TactService
 
     public function getCdnConfig(string $product, string $region = self::DEFAULT_REGION): Config
     {
-        $versionConfig = $this->getVersionConfig($product, $region);
-        $cdnConfig     = new Config($this->cache, $versionConfig->getServers(), $versionConfig->getCDNPath(), $versionConfig->getCDNConfig());
+        return LaravelCache::remember(sprintf('tact-cdnconfig-%s-%s', $product, $region), 60 * CarbonInterface::SECONDS_PER_MINUTE, function () use ($product, $region): Config {
+            $versionConfig = $this->getVersionConfig($product, $region);
+            $cdnConfig     = new Config($this->cache, $versionConfig->getServers(), $versionConfig->getCDNPath(), $versionConfig->getCDNConfig());
 
-        if (empty($cdnConfig->getByKey('archives'))) {
-            throw new TactException(sprintf('Skip build %s in product %s because it is encrypted', $versionConfig->getBuildConfig(), $product));
-        }
-
-        return $cdnConfig;
-    }
-
-    private function downloadTactKeys(): int
-    {
-        $keys = [];
-        try {
-            $list = HTTP::get(env('TACT_KEY_SOURCE_URL', self::DEFAULT_TACT_KEY_URL));
-        } catch (Exception $e) {
-            echo $e->getMessage(), "\n";
-
-            return 0;
-        }
-
-        $lines = explode("\n", $list);
-        foreach ($lines as $line) {
-            if (preg_match('/([0-9A-F]{16})\s+([0-9A-F]{32})/i', $line, $match)) {
-                $keys[strrev(hex2bin($match[1]))] = hex2bin($match[2]);
+            if (empty($cdnConfig->getByKey('archives'))) {
+                throw new TactException(sprintf('Skip build %s in product %s because it is encrypted', $versionConfig->getBuildConfig(), $product));
             }
-        }
 
-        if ($keys) {
-            BLTE::loadEncryptionKeys($keys);
-        }
-
-        return count($keys);
+            return $cdnConfig;
+        });
     }
 }

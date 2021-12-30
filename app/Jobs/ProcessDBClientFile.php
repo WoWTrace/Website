@@ -74,11 +74,15 @@ class ProcessDBClientFile implements ShouldQueue
     private function processMap(DBClientFileService $dbClientFileService, ListFileService $listFileService): array
     {
         $generatedListFile = [];
-        $db2               = $dbClientFileService->open(DBClientFile::Map(), $this->build->productKey);
-        $db2->fetchColumnNames();
+        $dbClientFile      = $dbClientFileService->open(DBClientFile::Map(), $this->build->productKey);
+        if (empty($dbClientFile)) {
+            return $generatedListFile;
+        }
 
-        foreach ($db2->getIds() as $id) {
-            $row = $db2->getRecord($id);
+        $dbClientFile->fetchColumnNames();
+
+        foreach ($dbClientFile->getIds() as $id) {
+            $row = $dbClientFile->getRecord($id);
 
             if (empty($row['Directory']))
                 break;
@@ -88,7 +92,7 @@ class ProcessDBClientFile implements ShouldQueue
             }
 
             if (!empty($row['WdtFileDataID'])) {
-                $generatedListFile[(int)$row['WdtFileDataID']] = $listFileService->pathClean(sprintf('world/maps/azeroth/%s.wdt', $row['Directory']));
+                $generatedListFile[(int)$row['WdtFileDataID']] = $listFileService->pathClean(sprintf('world/maps/%s/%s.wdt', $row['Directory'], $row['Directory']));
             }
         }
 
@@ -103,11 +107,15 @@ class ProcessDBClientFile implements ShouldQueue
     private function processManifestInterfaceData(DBClientFileService $dbClientFileService, ListFileService $listFileService): array
     {
         $generatedListFile = [];
-        $db2               = $dbClientFileService->open(DBClientFile::ManifestInterfaceData(), $this->build->productKey);
-        $db2->fetchColumnNames();
+        $dbClientFile      = $dbClientFileService->open(DBClientFile::ManifestInterfaceData(), $this->build->productKey);
+        if (empty($dbClientFile)) {
+            return $generatedListFile;
+        }
 
-        foreach ($db2->getIds() as $id) {
-            $row = $db2->getRecord($id);
+        $dbClientFile->fetchColumnNames();
+
+        foreach ($dbClientFile->getIds() as $id) {
+            $row = $dbClientFile->getRecord($id);
 
             if (empty($row['FilePath']) || empty($row['FileName']))
                 break;
@@ -126,11 +134,15 @@ class ProcessDBClientFile implements ShouldQueue
     private function processManifestInterfaceTOCData(DBClientFileService $dbClientFileService, ListFileService $listFileService): array
     {
         $generatedListFile = [];
-        $db2               = $dbClientFileService->open(DBClientFile::ManifestInterfaceTOCData(), $this->build->productKey);
-        $db2->fetchColumnNames();
+        $dbClientFile      = $dbClientFileService->open(DBClientFile::ManifestInterfaceTOCData(), $this->build->productKey);
+        if (empty($dbClientFile)) {
+            return $generatedListFile;
+        }
 
-        foreach ($db2->getIds() as $id) {
-            $row = $db2->getRecord($id);
+        $dbClientFile->fetchColumnNames();
+
+        foreach ($dbClientFile->getIds() as $id) {
+            $row = $dbClientFile->getRecord($id);
 
             if (empty($row['FilePath']))
                 break;

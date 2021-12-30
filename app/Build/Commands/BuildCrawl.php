@@ -31,7 +31,7 @@ class BuildCrawl extends Command
     {
         if (PHP_OS_FAMILY !== 'Linux') {
             $this->error('This command only works under linux!');
-            //return Command::FAILURE;
+            return Command::FAILURE;
         }
 
         $this->tactService = $tactService;

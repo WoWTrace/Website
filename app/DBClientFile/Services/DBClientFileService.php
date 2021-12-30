@@ -21,21 +21,25 @@ final class DBClientFileService
             return null;
         }
 
-        $versionConfig    = $this->tactService->getVersionConfig($product, $region);
-        $dbClientFilePath = Storage::path(sprintf('tactCache/dbclientfile/%s/%s/%s/%s.db2', $product, $versionConfig->getVersion(), $locale, $dbClientFile->getKey()));
-
-        return new Reader($dbClientFilePath);
+        return new Reader($this->getStoragePath($dbClientFile, $product, $locale, $region));
     }
 
     public function download(DBClientFile $dbClientFile, string $product, string $locale = 'enUS', string $region = TactService::DEFAULT_REGION): bool
     {
+        $storagePath = $this->getStoragePath($dbClientFile, $product, $locale, $region);
+
+        return $this->tactService->downloadFileByNameOrId((string)$dbClientFile->getValue(), $storagePath, $product, $region, $locale);
+    }
+
+    public function getStoragePath(DBClientFile $dbClientFile, string $product, string $locale = 'enUS', string $region = TactService::DEFAULT_REGION): string
+    {
         $versionConfig  = $this->tactService->getVersionConfig($product, $region);
-        $downloadFolder = Storage::path(sprintf('tactCache/dbclientfile/%s/%s/%s', $product, $versionConfig->getVersion(), $locale));
+        $downloadFolder = Storage::path(sprintf('dbclientfile/%s/%s/%s', $product, $versionConfig->getVersion(), $locale));
 
         if (!is_dir($downloadFolder)) {
             mkdir($downloadFolder, 0777, true);
         }
 
-        return $this->tactService->downloadFileByNameOrId((string)$dbClientFile->getValue(), sprintf('%s/%s.db2', $downloadFolder, $dbClientFile->getKey()), $product, $region, $locale);
+        return sprintf('%s/%s.db2', $downloadFolder, $dbClientFile->getKey());
     }
 }
