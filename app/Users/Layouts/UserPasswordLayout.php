@@ -8,7 +8,6 @@ use Orchid\Platform\Models\User;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Password;
 use Orchid\Screen\Layouts\Rows;
-use function __;
 
 class UserPasswordLayout extends Rows
 {
@@ -20,7 +19,7 @@ class UserPasswordLayout extends Rows
     public function fields(): array
     {
         /** @var User $user */
-        $user = $this->query->get('user');
+        $user        = $this->query->get('user');
         $placeholder = $user->exists
             ? __('Leave empty to keep current password')
             : __('Enter the password to be set');

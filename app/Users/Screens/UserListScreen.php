@@ -14,7 +14,6 @@ use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Link;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
-use function __;
 
 class UserListScreen extends Screen
 {

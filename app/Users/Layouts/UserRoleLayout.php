@@ -8,7 +8,6 @@ use Orchid\Platform\Models\Role;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Layouts\Rows;
-use function __;
 
 class UserRoleLayout extends Rows
 {

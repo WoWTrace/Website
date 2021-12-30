@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Roles\Screens;
 
+use App\Common\Screen\Screen;
 use App\Roles\Layouts\RoleListLayout;
 use Orchid\Platform\Models\Role;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layout;
-use Orchid\Screen\Screen;
 use function __;
 use function route;
 

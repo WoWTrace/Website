@@ -7,7 +7,6 @@ namespace App\Users\Layouts;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Rows;
-use function __;
 
 class UserEditLayout extends Rows
 {

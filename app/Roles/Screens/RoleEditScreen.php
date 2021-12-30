@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Roles\Screens;
 
+use App\Common\Screen\Screen;
 use App\Roles\Layouts\RoleEditLayout;
 use App\Roles\Layouts\RolePermissionLayout;
 use Exception;
@@ -13,7 +14,6 @@ use Illuminate\Validation\Rule;
 use Orchid\Platform\Models\Role;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
-use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 use function __;

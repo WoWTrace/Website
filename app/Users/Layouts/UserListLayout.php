@@ -13,7 +13,6 @@ use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Persona;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
-use function __;
 
 class UserListLayout extends Table
 {
@@ -42,7 +41,7 @@ class UserListLayout extends Table
                 ->filter(Input::make())
                 ->render(function (User $user) {
                     return ModalToggle::make($user->email)
-                        ->modal('detailModal')
+                        ->modal('oneAsyncModal')
                         ->modalTitle($user->presenter()->title())
                         ->method('saveUser')
                         ->asyncParameters([

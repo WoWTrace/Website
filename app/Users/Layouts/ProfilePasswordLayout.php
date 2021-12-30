@@ -7,7 +7,6 @@ namespace App\Users\Layouts;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Password;
 use Orchid\Screen\Layouts\Rows;
-use function __;
 
 class ProfilePasswordLayout extends Rows
 {
