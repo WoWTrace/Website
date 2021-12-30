@@ -74,7 +74,7 @@ class ProcessDBClientFile implements ShouldQueue
     private function processMap(DBClientFileService $dbClientFileService, ListFileService $listFileService): array
     {
         $generatedListFile = [];
-        $dbClientFile      = $dbClientFileService->open(DBClientFile::Map(), $this->build->productKey);
+        $dbClientFile      = $dbClientFileService->open(DBClientFile::Map(), $this->build);
         if (empty($dbClientFile)) {
             return $generatedListFile;
         }
@@ -107,7 +107,7 @@ class ProcessDBClientFile implements ShouldQueue
     private function processManifestInterfaceData(DBClientFileService $dbClientFileService, ListFileService $listFileService): array
     {
         $generatedListFile = [];
-        $dbClientFile      = $dbClientFileService->open(DBClientFile::ManifestInterfaceData(), $this->build->productKey);
+        $dbClientFile      = $dbClientFileService->open(DBClientFile::ManifestInterfaceData(), $this->build);
         if (empty($dbClientFile)) {
             return $generatedListFile;
         }
@@ -134,7 +134,7 @@ class ProcessDBClientFile implements ShouldQueue
     private function processManifestInterfaceTOCData(DBClientFileService $dbClientFileService, ListFileService $listFileService): array
     {
         $generatedListFile = [];
-        $dbClientFile      = $dbClientFileService->open(DBClientFile::ManifestInterfaceTOCData(), $this->build->productKey);
+        $dbClientFile      = $dbClientFileService->open(DBClientFile::ManifestInterfaceTOCData(), $this->build);
         if (empty($dbClientFile)) {
             return $generatedListFile;
         }

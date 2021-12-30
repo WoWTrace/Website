@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Common\Services\TactService;
 use App\Models\Build;
 use App\Models\ListFile;
 use App\Models\ListFileVersion;
-use Erorus\CASC\Cache;
-use Erorus\CASC\Manifest\Root;
-use Erorus\CASC\VersionConfig\HTTP as HTTPVersionConfig;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -41,17 +40,21 @@ class ProcessRoot implements ShouldQueue
         //
     }
 
-    public function handle(Cache $cache): void
+    public function handle(TactService $tactService): void
     {
         ini_set('memory_limit', '4G');
-        $root = $this->getRoot($cache);
+        $root = $tactService->getRootByBuild($this->build);
 
-        $queryList = [];
-        $now = now();
-        $buildId = $this->build->id;
+        $queryList   = [];
+        $now         = now();
+        $buildId     = $this->build->id;
         $clientBuild = $this->build->clientBuild;
 
+        $listFileQuery = ListFile::query();
+        $listFileVersionQuery = ListFileVersion::query();
         foreach ($root->all() as $fileId => $rootEntry) {
+            $encodingMap = $tactService->getEncodingContentMapWithBuild($rootEntry['contentHash'], $this->build, true);
+
             $queryList[] = [
                 'listfile'        => [
                     'id'         => $fileId,
@@ -61,38 +64,31 @@ class ProcessRoot implements ShouldQueue
                 ],
                 'listfileVersion' => [
                     'id'          => $fileId,
-                    'contentHash' => $rootEntry['contentHash'] ?? null,
+                    'contentHash' => $rootEntry['contentHash'],
                     'encrypted'   => $rootEntry['encrypted'] ?? false,
+                    'fileSize'    => $encodingMap?->getFileSize() ?? null,
                     'buildId'     => $buildId,
                     'clientBuild' => $clientBuild,
                     'created_at'  => $now->toDateTimeString(),
                     'updated_at'  => $now->toDateTimeString(),
                 ]
             ];
+
+            if (count($queryList) >= self::QUERY_BUFFER_SIZE) {
+                $this->saveQueryBuffer($listFileQuery, $listFileVersionQuery, $queryList);
+            }
         }
 
-        $listFileQuery = ListFile::query();
-        $listFileVersionQuery = ListFileVersion::query();
-
-        foreach (array_chunk($queryList, self::QUERY_BUFFER_SIZE, true) as $chunk) {
-            $listFileQuery->insertOrIgnore(array_column($chunk, 'listfile'));
-            $listFileVersionQuery->insertOrIgnore(array_column($chunk, 'listfileVersion'));
-        }
-
-        unset($queryList);
+        $this->saveQueryBuffer($listFileQuery, $listFileVersionQuery, $queryList);
 
         ProcessDBClientFile::dispatch($this->build);
     }
 
-    private function getRoot(Cache $cache): Root
+    private function saveQueryBuffer(Builder $listFileQuery, Builder $listFileVersionQuery, array &$queryBuffer)
     {
-        $versionConfig = new HTTPVersionConfig($cache, $this->build->productKey, 'eu');
-
-        return new Root(
-            $cache,
-            $versionConfig->getServers(),
-            $versionConfig->getCDNPath(),
-            $this->build->rootCdnHash
-        );
+        $listFileQuery->insertOrIgnore(array_column($queryBuffer, 'listfile'));
+        $listFileVersionQuery->insertOrIgnore(array_column($queryBuffer, 'listfileVersion'));
+        $queryBuffer = [];
     }
+
 }

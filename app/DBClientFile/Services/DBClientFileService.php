@@ -5,6 +5,7 @@ namespace App\DBClientFile\Services;
 
 use App\Common\Services\TactService;
 use App\DBClientFile\Support\DBClientFile;
+use App\Models\Build;
 use Erorus\DB2\Reader;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,26 +16,25 @@ final class DBClientFileService
         //
     }
 
-    public function open(DBClientFile $dbClientFile, string $product, string $locale = 'enUS', string $region = TactService::DEFAULT_REGION): ?Reader
+    public function open(DBClientFile $dbClientFile, Build $build, string $locale = 'enUS'): ?Reader
     {
-        if (!$this->download($dbClientFile, $product, $locale, $region)) {
+        if (!$this->download($dbClientFile, $build, $locale)) {
             return null;
         }
 
-        return new Reader($this->getStoragePath($dbClientFile, $product, $locale, $region));
+        return new Reader($this->getStoragePath($dbClientFile, $build, $locale));
     }
 
-    public function download(DBClientFile $dbClientFile, string $product, string $locale = 'enUS', string $region = TactService::DEFAULT_REGION): bool
+    public function download(DBClientFile $dbClientFile, Build $build, string $locale = 'enUS'): bool
     {
-        $storagePath = $this->getStoragePath($dbClientFile, $product, $locale, $region);
+        $storagePath = $this->getStoragePath($dbClientFile, $build, $locale);
 
-        return $this->tactService->downloadFileByNameOrId((string)$dbClientFile->getValue(), $storagePath, $product, $region, $locale);
+        return $this->tactService->downloadFileByNameOrIdWithBuild((string)$dbClientFile->getValue(), $storagePath, $build, $locale);
     }
 
-    public function getStoragePath(DBClientFile $dbClientFile, string $product, string $locale = 'enUS', string $region = TactService::DEFAULT_REGION): string
+    public function getStoragePath(DBClientFile $dbClientFile, Build $build, string $locale = 'enUS'): string
     {
-        $versionConfig  = $this->tactService->getVersionConfig($product, $region);
-        $downloadFolder = Storage::path(sprintf('dbclientfile/%s/%s/%s', $product, $versionConfig->getVersion(), $locale));
+        $downloadFolder = Storage::path(sprintf('dbclientfile/%s/%s/%s', $build->productKey, sprintf('%s.%u', $build->patch, $build->clientBuild), $locale));
 
         if (!is_dir($downloadFolder)) {
             mkdir($downloadFolder, 0777, true);

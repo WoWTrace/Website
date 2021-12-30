@@ -2033,7 +2033,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Luzifix/casc.git",
-                "reference": "ada3101478501d5c639bd46fd1265376cd9612c9"
+                "reference": "3ba24dfc8b2ff69cebe8a18f5ffff966421412ee"
             },
             "require": {
                 "ext-curl": "*",
@@ -2058,7 +2058,7 @@
                 }
             ],
             "description": "CASC extractor for World of Warcraft data",
-            "time": "2021-12-30T00:19:15+00:00"
+            "time": "2021-12-30T03:15:49+00:00"
         },
         {
             "name": "mockery/mockery",
