@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default'        => 'defaults',
+    'default'        => 'default',
     'documentations' => [
         'default' => [
             'api' => [
