@@ -15,7 +15,7 @@
  *     description="Contains all ListFile related endpoints",
  *     @OA\ExternalDocumentation(
  *         description="Frontend Version",
- *         url="/listfile"
+ *         url="https://wowtrace.net/listfile"
  *     )
  * )
  * @OA\Server(url="https://api.wowtrace.net/")
