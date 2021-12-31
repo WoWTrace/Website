@@ -6,6 +6,7 @@ namespace App\ListFile\Layouts\Suggest;
 
 
 use Orchid\Screen\Field;
+use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Layouts\Rows;
@@ -26,6 +27,9 @@ class SuggestTextBoxLayout extends Rows
                 ->required()
                 ->title(__('ListFile entries'))
                 ->placeholder("1;interface/cinematics/logo_800.avi\n21;interface/cinematics/logo_1024.avi\n22;interface/cinematics/wow_intro_1024.avi"),
+            CheckBox::make('onlyNew')
+                ->placeholder('Skip already named files and only add new ones')
+                ->checked(true),
         ];
     }
 }

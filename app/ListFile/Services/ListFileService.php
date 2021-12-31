@@ -6,7 +6,7 @@ use App\Models\User;
 
 final class ListFileService
 {
-    public const MAX_ROWS_PER_REQUEST = 20000;
+    public const MAX_ROWS_PER_REQUEST = 10000;
     public const PATH_REGEX = '/(\d+;[a-z0-9\/\\\\.\-_ \(\)]+$)/im';
 
     // Cache blizzard user id
