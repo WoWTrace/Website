@@ -11,7 +11,7 @@
     --bs-cyan: #17a2b8;
     --bs-white: #fff;
     --bs-gray: #6c757d;
-    --bs-gray-dark: #343a40;
+    --bs-gray-dark: #202225;
     --bs-gray-100: #f8f9fa;
     --bs-gray-200: #e9ecef;
     --bs-gray-300: #dee2e6;
@@ -19,8 +19,8 @@
     --bs-gray-500: #adb5bd;
     --bs-gray-600: #6c757d;
     --bs-gray-700: #495057;
-    --bs-gray-800: #343a40;
-    --bs-gray-900: #212529;
+    --bs-gray-800: #36393f;
+    --bs-gray-900: #202225;
     --bs-primary: #007bff;
     --bs-secondary: #6c757d;
     --bs-success: #28a745;
@@ -28,7 +28,7 @@
     --bs-warning: #ffc107;
     --bs-danger: #dc3545;
     --bs-light: #f8f9fa;
-    --bs-dark: #212529;
+    --bs-dark: #202225;
     --bs-primary-rgb: 0, 123, 255;
     --bs-secondary-rgb: 108, 117, 125;
     --bs-success-rgb: 40, 167, 69;
@@ -36,11 +36,11 @@
     --bs-warning-rgb: 255, 193, 7;
     --bs-danger-rgb: 220, 53, 69;
     --bs-light-rgb: 248, 249, 250;
-    --bs-dark-rgb: 33, 37, 41;
+    --bs-dark-rgb: 32, 34, 37;
     --bs-white-rgb: 255, 255, 255;
     --bs-black-rgb: 28, 43, 54;
-    --bs-body-color-rgb: 33, 37, 41;
-    --bs-body-bg-rgb: 52, 58, 64;
+    --bs-body-color-rgb: 32, 34, 37;
+    --bs-body-bg-rgb: 54, 57, 63;
     --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --bs-gradient: linear-gradient(180deg, hsla(0, 0%, 100%, .15), hsla(0, 0%, 100%, 0));
@@ -48,8 +48,8 @@
     --bs-body-font-size: 1rem;
     --bs-body-font-weight: 400;
     --bs-body-line-height: 1.5;
-    --bs-body-color: #212529;
-    --bs-body-bg: #343a40;
+    --bs-body-color: #202225;
+    --bs-body-bg: #36393f;
 }
 
 
@@ -66,11 +66,11 @@ body, html {
 }
 
 .layout, .bg-white {
-    background-color: #272727 !important
+    background-color: #202225 !important
 }
 
 .bg-light, .page-link, .dropdown-menu, .dropdown-item {
-    background-color: #3a4046 !important
+    background-color: #18191c !important
 }
 
 ::placeholder {
@@ -155,7 +155,7 @@ body, html {
 .modal .modal-footer,
 .select2-dropdown,
 .select2-results__option {
-    background: #272727 !important;
+    background: #202225 !important;
 }
 
 .bootstrap-tagsinput,
