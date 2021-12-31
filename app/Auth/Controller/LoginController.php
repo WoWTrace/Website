@@ -119,7 +119,7 @@ class LoginController extends Controller
     {
         $lockUser = $cookieJar->forget('lockUser');
 
-        return redirect()->route('platform.login')->withCookie($lockUser);
+        return redirect()->route('web.login.index')->withCookie($lockUser);
     }
 
     /**
@@ -147,8 +147,6 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        return $request->wantsJson()
-            ? new JsonResponse([], 204)
-            : redirect('/');
+        return $request->wantsJson() ? new JsonResponse([], 204) : redirect('/');
     }
 }

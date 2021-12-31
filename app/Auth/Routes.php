@@ -20,7 +20,7 @@ final class Routes
             static function (Router $router): void {
                 $router->get('/', [LoginController::class, 'showLoginForm'])->name('index');
                 $router->post('/', [LoginController::class, 'login'])->name('submit')->middleware('throttle:60,1');
-                $router->post('lock', [LoginController::class, 'resetCookieLockMe'])->name('lock');
+                $router->get('/lock', [LoginController::class, 'resetCookieLockMe'])->name('lock');
             }
         );
 
