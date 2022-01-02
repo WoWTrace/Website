@@ -16,12 +16,13 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $contentHash
  * @property bool $encrypted
+ * @property int|null $fileSize
  * @property bool $processed
  * @property int $buildId
  * @property int $clientBuild
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\Build $build
+ * @property-read Build $build
  * @method static Builder|ListFileVersion newModelQuery()
  * @method static Builder|ListFileVersion newQuery()
  * @method static Builder|ListFileVersion query()

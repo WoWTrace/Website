@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ListFile\Layouts;
+namespace App\ListFile\Layouts\Index;
 
 use App\Models\ListFile;
 use Orchid\Screen\Field;

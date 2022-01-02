@@ -3,8 +3,8 @@
 namespace App\ListFile\Screens;
 
 use App\Common\Screen\Screen;
-use App\ListFile\Layouts\ListFileAddLayout;
-use App\ListFile\Layouts\ListFileTableLayout;
+use App\ListFile\Layouts\Index\ListFileAddLayout;
+use App\ListFile\Layouts\Index\ListFileTableLayout;
 use App\ListFile\Platform as ListFilePlatform;
 use App\Models\ListFile;
 use Illuminate\Http\RedirectResponse;
@@ -47,6 +47,10 @@ class ListFileScreen extends Screen
     public function commandBar(): array
     {
         return [
+            Link::make(__('Review suggestions'))
+                ->icon('eyeglasses')
+                ->route(ListFilePlatform::ROUTE_LISTFILE_SUGGESTIONS_REVIEW_KEY)
+                ->canSee(Auth::user()?->hasAccess('listfile.reviewSuggestions') ?? false),
             Link::make(__('Suggest names'))
                 ->icon('cloud-upload')
                 ->route(ListFilePlatform::ROUTE_LISTFILE_SUGGEST_KEY)
@@ -99,7 +103,7 @@ class ListFileScreen extends Screen
             'listfile.path' => 'string|required|unique:listfile,path',
         ]);
 
-        $id = $request->input('listfile.id');
+        $id   = $request->input('listfile.id');
         $path = $request->input('listfile.path');
 
         ListFile::query()->insertOrIgnore([

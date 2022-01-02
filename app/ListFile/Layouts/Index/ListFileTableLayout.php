@@ -1,9 +1,9 @@
 <?php
 
-namespace App\ListFile\Layouts;
+namespace App\ListFile\Layouts\Index;
 
 use App\Common\Screen\Actions\Span;
-use App\Common\Screen\TDWithColor;
+use App\Common\Screen\TDExtended;
 use App\Models\ListFile;
 use App\Models\ListFileVersion;
 use Orchid\Screen\Actions\DropDown;
@@ -14,24 +14,13 @@ use function __;
 
 class ListFileTableLayout extends Table
 {
-    public const COLOR_EMPTY = 'rgba(255, 88, 88, 0.315)';
-    public const COLOR_UNVERIFIED = 'rgba(103, 58, 183, 0.315)';
+    public const COLOR_EMPTY = 'rgba(220, 63, 66, 0.35)';
+    public const COLOR_UNVERIFIED = 'rgba(165, 126, 248, 0.315)';
 
-    /**
-     * Data source.
-     *
-     * The name of the key to fetch it from the query.
-     * The results of which will be elements of the table.
-     *
-     * @var string
-     */
+    /** @inerhitDoc */
     protected $target = 'listfile';
 
-    /**
-     * Get the table cells to be displayed.
-     *
-     * @return TD[]
-     */
+    /** @inerhitDoc */
     protected function columns(): array
     {
         return [
@@ -42,11 +31,11 @@ class ListFileTableLayout extends Table
                 ->alignLeft()
                 ->filter(Input::make()->type('number')),
 
-            TDWithColor::make('path', __('Filename'))
+            TDExtended::make('path', __('Filename'))
                 ->sort()
                 ->filter(Input::make())
                 ->alignLeft()
-                ->renderColor(static function (ListFile $listFile, TDWithColor $td) {
+                ->renderColor(static function (ListFile $listFile, TDExtended $td) {
                     if (empty($listFile->path)) {
                         $td->backgroundColor(self::COLOR_EMPTY);
                     } elseif (!$listFile->verified) {
@@ -55,7 +44,7 @@ class ListFileTableLayout extends Table
                 }),
 
 
-            TDWithColor::make('lookup', __('Lookup'))
+            TDExtended::make('lookup', __('Lookup'))
                 ->width(145)
                 ->sort()
                 ->defaultHidden()
@@ -111,7 +100,7 @@ class ListFileTableLayout extends Table
                 }),
 
 
-            TDWithColor::make('type', __('Type'))
+            TDExtended::make('type', __('Type'))
                 ->width(120)
                 ->sort()
                 ->filter(Input::make())

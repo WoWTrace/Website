@@ -25,10 +25,10 @@ use Orchid\Screen\AsSource;
  * @property bool $verified
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Collection|\App\Models\ListFileVersion[] $versions
+ * @property-read Collection|ListFileVersion[] $versions
  * @property-read int|null $versions_count
  * @method static Builder|ListFile defaultSort(string $column, string $direction = 'asc')
- * @method static Builder|ListFile filters(?\Orchid\Filters\HttpFilter $httpFilter = null)
+ * @method static Builder|ListFile filters(?HttpFilter $httpFilter = null)
  * @method static Builder|ListFile filtersApply(array $filters = [])
  * @method static Builder|ListFile filtersApplySelection($selection)
  * @method static Builder|ListFile newModelQuery()

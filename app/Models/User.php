@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Support\Carbon;
+use Orchid\Filters\HttpFilter;
 use Orchid\Platform\Models\Role;
 use Orchid\Platform\Models\User as Authenticatable;
 
@@ -28,19 +29,19 @@ use Orchid\Platform\Models\User as Authenticatable;
  * @property-read int|null $notifications_count
  * @property-read Collection|Role[] $roles
  * @property-read int|null $roles_count
- * @method static \Illuminate\Database\Eloquent\Builder|User byAccess(string $permitWithoutWildcard)
- * @method static \Illuminate\Database\Eloquent\Builder|User byAnyAccess($permitsWithoutWildcard)
- * @method static \Illuminate\Database\Eloquent\Builder|User countByDays($startDate = null, $stopDate = null, string $dateColumn = 'created_at')
- * @method static \Illuminate\Database\Eloquent\Builder|User countForGroup(string $groupColumn)
- * @method static \Illuminate\Database\Eloquent\Builder|User defaultSort(string $column, string $direction = 'asc')
- * @method static \Illuminate\Database\Eloquent\Builder|User filters(?\Orchid\Filters\HttpFilter $httpFilter = null)
- * @method static \Illuminate\Database\Eloquent\Builder|User filtersApply(array $filters = [])
- * @method static \Illuminate\Database\Eloquent\Builder|User filtersApplySelection($selection)
+ * @method static Builder|User byAccess(string $permitWithoutWildcard)
+ * @method static Builder|User byAnyAccess($permitsWithoutWildcard)
+ * @method static Builder|User countByDays($startDate = null, $stopDate = null, string $dateColumn = 'created_at')
+ * @method static Builder|User countForGroup(string $groupColumn)
+ * @method static Builder|User defaultSort(string $column, string $direction = 'asc')
+ * @method static Builder|User filters(?HttpFilter $httpFilter = null)
+ * @method static Builder|User filtersApply(array $filters = [])
+ * @method static Builder|User filtersApplySelection($selection)
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User sumByDays(string $value, $startDate = null, $stopDate = null, string $dateColumn = 'created_at')
- * @method static \Illuminate\Database\Eloquent\Builder|User valuesByDays(string $value, $startDate = null, $stopDate = null, string $dateColumn = 'created_at')
+ * @method static Builder|User sumByDays(string $value, $startDate = null, $stopDate = null, string $dateColumn = 'created_at')
+ * @method static Builder|User valuesByDays(string $value, $startDate = null, $stopDate = null, string $dateColumn = 'created_at')
  * @mixin Eloquent
  */
 final class User extends Authenticatable
