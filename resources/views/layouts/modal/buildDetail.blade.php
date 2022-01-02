@@ -30,11 +30,11 @@
         <tbody>
         <tr>
             <td><b>Build Config</b></td>
-            <td><span class="badge bg-success hash">{{$buildConfig ?? __('Unknown')}}</span></td>
+            <td><span class="badge bg-{{empty($buildConfig) ? 'warning' : 'success'}} hash">{{$buildConfig ?? __('Unknown')}}</span></td>
         </tr>
         <tr>
             <td><b>CDN Config</b></td>
-            <td><span class="badge bg-success hash">{{$cdnConfig ?? __('Unknown')}}</span></td>
+            <td><span class="badge bg-{{empty($cdnConfig) ? 'warning' : 'success'}} hash">{{$cdnConfig ?? __('Unknown')}}</span></td>
         </tr>
         <tr>
             <td><b>Patch Config</b></td>
@@ -46,7 +46,7 @@
         </tr>
         <tr>
             <td><b>Product Config</b></td>
-            <td><span class="badge bg-success hash">{{$productConfig ?? __('Unknown')}}</span></td>
+            <td><span class="badge bg-{{empty($productConfig) ? 'warning' : 'success'}} hash">{{$productConfig ?? __('Unknown')}}</span></td>
         </tr>
         </tbody>
     </table>

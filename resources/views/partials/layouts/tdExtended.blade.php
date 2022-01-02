@@ -5,6 +5,10 @@ if (!empty($width)) {
     $style[] = sprintf('width: %s;', $width);
 }
 
+if (!empty($minWidth)) {
+    $style[] = sprintf('min-width: %s !important;', $minWidth);
+}
+
 if (!empty($backgroundColor)) {
     $style[] = sprintf('background-color: %s;', $backgroundColor);
 }
@@ -14,7 +18,7 @@ if (!empty($color)) {
 }
 ?>
 
-<td class="text-{{$align}} @if(!$width) text-truncate @endif"
+<td class="text-{{$align}} @if(!$width && !$minWidth) text-truncate @endif"
     data-column="{{ $slug }}" colspan="{{ $colspan }}"
     @empty(!$style)style="{{implode(' ', $style)}}"@endempty
 >

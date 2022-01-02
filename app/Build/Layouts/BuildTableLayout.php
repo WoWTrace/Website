@@ -2,6 +2,8 @@
 
 namespace App\Build\Layouts;
 
+use App\Common\Screen\Actions\Icon;
+use App\Common\Screen\TDExtended;
 use App\Models\Build;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
@@ -29,29 +31,46 @@ class BuildTableLayout extends Table
     protected function columns(): array
     {
         return [
-            TD::make('patch', __('Patch'))
+            TDExtended::make('patch', __('Patch'))
                 ->cantHide()
-                ->width('110px')
+                ->minWidth(75)
                 ->filter(Input::make()),
 
-            TD::make('clientBuild', __('Build'))
+            TDExtended::make('clientBuild', __('Build'))
                 ->sort()
-                ->width('110px')
-                ->filter(Input::make()->type('number')),
+                ->minWidth(90)
+                ->filter(Input::make()->type('number'))
+                ->render(static function (Build $build): string {
+                    if ($build->clientBuild  % 10000 == 0) {
+                        return sprintf('%u <span class="lead">&#x1f389;</span>', $build->clientBuild);
+                    }
+
+                    return (string)$build->clientBuild;
+                }),
 
             TD::make('branch', __('Branch'))
                 ->alignLeft()
                 ->render(function (Build $build) {
                     return sprintf(
-                        '<b class="badge %s">%s</b>',
+                        '<b class="badge %s">%s</b> %s',
                         $build->product->badgeType,
-                        $build->product->badgeText
+                        $build->product->badgeText,
+                        $build->custom ? '<b class="badge bg-warning" alt="Build configuration for this build was is custom generated.">&#x270f;</b>' : ''
                     );
                 }),
 
             TD::make('buildConfig', __('Build Config')),
             TD::make('patchConfig', __('Patch Config')),
             TD::make('cdnConfig', __('CDN Config')),
+            TD::make('compiledAt', __('Compiled at (PT)'))
+                ->sort()
+                ->render(function (Build $build) {
+                    if (empty($build->compiledAt)) {
+                        return '';
+                    }
+
+                    return $build->compiledAt->format('Y-m-d H:i:s');
+                }),
             TD::make('created_at', __('Detected at (CEST)'))
                 ->sort()
                 ->render(function (Build $build) {

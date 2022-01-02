@@ -14,7 +14,7 @@ class DetailModalLayout extends Layout
     /**
      * @var string
      */
-    protected $template = 'layouts.build';
+    protected $template = 'layouts.modal.buildDetail';
 
     /**
      * @var Repository

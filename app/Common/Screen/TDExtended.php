@@ -8,11 +8,29 @@ use Closure;
 use Illuminate\Support\Str;
 use Orchid\Screen\TD;
 
-class TDWithColor extends TD
+class TDExtended extends TD
 {
+    /** @var string|null|int */
+    protected $minWidth;
     protected ?string  $backgroundColor;
     protected ?string  $textColor;
     protected ?Closure $renderColor;
+
+    /**
+     * @param string|int $minWidth
+     *
+     * @return static
+     */
+    public function minWidth($minWidth): self
+    {
+        if (is_int($minWidth)) {
+            $minWidth = sprintf('%upx', $minWidth);
+        }
+
+        $this->minWidth = $minWidth;
+
+        return $this;
+    }
 
     public function backgroundColor(string $backgroundColor): self
     {
@@ -48,7 +66,7 @@ class TDWithColor extends TD
             call_user_func($this->renderColor, $repository, $this);
         }
 
-        return view('partials.layouts.tdWithColor', [
+        return view('partials.layouts.tdExtended', [
             'align'           => $this->align,
             'value'           => $value,
             'render'          => $this->render,
@@ -57,6 +75,7 @@ class TDWithColor extends TD
             'colspan'         => $this->colspan,
             'backgroundColor' => $this->backgroundColor ?? null,
             'textColor'       => $this->textColor ?? null,
+            'minWidth'        => $this->minWidth ?? null,
         ]);
     }
 

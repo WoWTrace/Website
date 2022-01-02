@@ -20,7 +20,7 @@ use Orchid\Screen\AsSource;
  * @property string $buildConfig
  * @property string $cdnConfig
  * @property string|null $patchConfig
- * @property string $productConfig
+ * @property string|null $productConfig
  * @property string $productKey
  * @property string $expansion
  * @property string $major
@@ -36,13 +36,16 @@ use Orchid\Screen\AsSource;
  * @property string $installCdnHash
  * @property string $downloadContentHash
  * @property string $downloadCdnHash
- * @property string $sizeContentHash
- * @property string $sizeCdnHash
+ * @property string|null $sizeContentHash
+ * @property string|null $sizeCdnHash
+ * @property bool $custom Builds which contains custom generated configs
+ * @property Carbon|null $compiledAt Compile time of the Wow.exe
+ * @property array<string> $processedBy List of process class names which processed this build
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read \App\Models\Product $product
+ * @property-read Product $product
  * @method static Builder|Build defaultSort(string $column, string $direction = 'asc')
- * @method static Builder|Build filters(?\Orchid\Filters\HttpFilter $httpFilter = null)
+ * @method static Builder|Build filters(?HttpFilter $httpFilter = null)
  * @method static Builder|Build filtersApply(array $filters = [])
  * @method static Builder|Build filtersApplySelection($selection)
  * @method static Builder|Build newModelQuery()
@@ -79,12 +82,17 @@ final class Build extends Model
         'downloadCdnHash',
         'sizeContentHash',
         'sizeCdnHash',
+        'archive',
+        'compiledAt',
     ];
 
     /** @inerhitDoc */
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'processedBy' => 'array',
+        'custom'      => 'bool',
+        'compiledAt'  => 'datetime',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
     ];
 
     /**

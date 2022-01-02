@@ -13,7 +13,7 @@ use Illuminate\Console\Command;
 class BuildCrawl extends Command
 {
     /** @inerhitDoc */
-    protected $signature = 'build:crawl {region=eu}';
+    protected $signature = 'build:crawl {region=eu} {--withoutProcessRoot}';
 
     /** @inerhitDoc */
     protected $description = 'Crawl available builds';
@@ -104,7 +104,9 @@ class BuildCrawl extends Command
                 'sizeCdnHash'         => $buildConfig->getByKey('size')[1],
             ]);
 
-            ProcessRoot::dispatch($build);
+            if (!$this->option('withoutProcessRoot')) {
+                ProcessRoot::dispatch($build);
+            }
 
         } catch (Exception $e) {
             $this->error($e->getMessage());

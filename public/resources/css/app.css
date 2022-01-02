@@ -8,6 +8,7 @@
     font-family: monospace;
     color: #000 !important;
 }
+
 #website-logo {
     width: 40px;
     height: 40px;
@@ -21,4 +22,23 @@
         height: 80px;
         background-image: url("/resources/image/logo.png");
     }
+}
+
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl, .container-full {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--bs-gutter-x, .75rem);
+    padding-right: var(--bs-gutter-x, .75rem);
+    width: 100%
+}
+
+.container-full {
+    max-width: initial !important;
+}
+
+.navbar > .container, .navbar > .container-fluid, .navbar > .container-lg, .navbar > .container-md, .navbar > .container-sm, .navbar > .container-xl, .navbar > .container-xxl, .navbar > .container-full {
+    align-items: center;
+    display: flex;
+    flex-wrap: inherit;
+    justify-content: space-between
 }
