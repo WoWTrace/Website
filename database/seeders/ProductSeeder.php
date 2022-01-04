@@ -142,7 +142,7 @@ final class ProductSeeder extends Seeder
                 'product'    => 'wowz',
                 'name'       => 'WoW Submission',
                 'badgeText'  => 'Submission',
-                'badgeType'  => 'bg-secondary',
+                'badgeType'  => 'bg-success',
                 'encrypted'  => false,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

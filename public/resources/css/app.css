@@ -1,5 +1,10 @@
+.badge {
+    text-shadow: 0 0 2px #000;
+}
+
 .badge.bg-warning {
     color: #212529 !important;
+    text-shadow: none;
 }
 
 .hash {
