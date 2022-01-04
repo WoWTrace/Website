@@ -13,8 +13,8 @@ class ListFileSeeder extends Seeder
 {
     public function run(): void
     {
-        Build::whereIntegerNotInRaw('id', '(SELECT `buildId` FROM `listfile_version` GROUP BY `buildId`)')
-            ->sortBy("clientBuild")
+        Build::whereRaw( '`id` NOT IN (SELECT `buildId` FROM `listfile_version` GROUP BY `buildId`)')
+            ->orderBy("clientBuild")
             ->each(static function(Build $build) {
             ProcessRoot::dispatch($build);
         });
