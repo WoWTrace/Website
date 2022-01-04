@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Build\Helper\BuildProcessor;
 use App\DBClientFile\Services\DBClientFileService;
 use App\DBClientFile\Support\DBClientFile;
 use App\ListFile\Services\ListFileService;
@@ -18,7 +19,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ProcessDBClientFile implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use BuildProcessor, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private const QUERY_BUFFER_SIZE = 7000;
 
@@ -43,6 +44,10 @@ class ProcessDBClientFile implements ShouldQueue
 
     public function handle(DBClientFileService $dbClientFileService, ListFileService $listFileService): void
     {
+        if ($this->alreadyProcessed()) {
+            return;
+        }
+
         ini_set('memory_limit', '1G');
 
         $generatedListFile = array_replace(
@@ -64,6 +69,8 @@ class ProcessDBClientFile implements ShouldQueue
 
             ListFile::upsert($queryBuffer, ['path'], ['path', 'type', 'verified']);
         }
+
+        $this->markAsProcessed();
     }
 
     /**

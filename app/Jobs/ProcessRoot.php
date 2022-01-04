@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Build\Helper\BuildProcessor;
 use App\Common\Services\TactService;
 use App\Models\Build;
 use App\Models\ListFile;
@@ -17,7 +18,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ProcessRoot implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use BuildProcessor, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private const QUERY_BUFFER_SIZE = 7000;
 
@@ -42,6 +43,10 @@ class ProcessRoot implements ShouldQueue
 
     public function handle(TactService $tactService): void
     {
+        if ($this->alreadyProcessed()) {
+            return;
+        }
+
         ini_set('memory_limit', '4G');
         $root = $tactService->getRootByBuild($this->build);
 
@@ -50,7 +55,7 @@ class ProcessRoot implements ShouldQueue
         $buildId     = $this->build->id;
         $clientBuild = $this->build->clientBuild;
 
-        $listFileQuery = ListFile::query();
+        $listFileQuery        = ListFile::query();
         $listFileVersionQuery = ListFileVersion::query();
         foreach ($root->all() as $fileId => $rootEntry) {
             $encodingMap = $tactService->getEncodingContentMapWithBuild($rootEntry['contentHash'], $this->build, true);
@@ -80,6 +85,7 @@ class ProcessRoot implements ShouldQueue
         }
 
         $this->saveQueryBuffer($listFileQuery, $listFileVersionQuery, $queryList);
+        $this->markAsProcessed();
 
         ProcessDBClientFile::dispatch($this->build);
     }

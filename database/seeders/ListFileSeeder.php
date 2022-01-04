@@ -13,11 +13,9 @@ class ListFileSeeder extends Seeder
 {
     public function run(): void
     {
-        if (ListFile::query()->count() !== 0) {
-            return;
-        }
-
-        Build::all()->each(static function(Build $build) {
+        Build::whereIntegerNotInRaw('id', '(SELECT `buildId` FROM `listfile_version` GROUP BY `buildId`)')
+            ->sortBy("clientBuild")
+            ->each(static function(Build $build) {
             ProcessRoot::dispatch($build);
         });
     }
