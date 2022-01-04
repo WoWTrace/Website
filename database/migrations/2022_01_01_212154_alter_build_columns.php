@@ -23,7 +23,7 @@ class AlterBuildColumns extends Migration
                 ->after('custom')
                 ->comment('Compile time of the Wow.exe');
             $table->json('processedBy')
-                ->default([])
+                ->default('[]')
                 ->after('compiledAt')
                 ->comment('List of process class names which processed this build');
         });

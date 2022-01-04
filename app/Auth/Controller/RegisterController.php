@@ -55,6 +55,10 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        if (!config('auth.registration')) {
+            return Redirect::route('platform.index');
+        }
+
         $request->validate([
             'name'     => 'required|string|min:3|max:20|alpha_dash|unique:users,name',
             'email'    => 'required|string|unique:users,email',
@@ -109,6 +113,10 @@ class RegisterController extends Controller
      */
     public function showRegisterForm(Request $request)
     {
+        if (!config('auth.registration')) {
+            return Redirect::route('platform.index');
+        }
+
         $user = $request->cookie('lockUser');
 
         /** @var EloquentUserProvider $provider */

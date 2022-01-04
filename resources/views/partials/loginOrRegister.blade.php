@@ -6,9 +6,11 @@
         </a>
     </div>
     <div class="col-md-6 col-xs-12">
+        @if(config('auth.registration'))
         <a class="btn btn-outline-primary btn-block" href="{{ route('web.register.index') }}">
             <x-orchid-icon path="key" class="small me-2"/>
             {{__('Register')}}
         </a>
+        @endif
     </div>
 </div>

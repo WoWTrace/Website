@@ -2,7 +2,6 @@
 
 namespace App\Build\Layouts;
 
-use App\Common\Screen\Actions\Icon;
 use App\Common\Screen\TDExtended;
 use App\Models\Build;
 use Orchid\Screen\Actions\ModalToggle;

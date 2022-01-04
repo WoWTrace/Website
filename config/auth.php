@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 return [
 
+    'registration' => env('AUTH_REGISTRATION_ENABLED', false),
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
