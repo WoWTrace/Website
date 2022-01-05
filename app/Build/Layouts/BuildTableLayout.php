@@ -12,6 +12,9 @@ use function __;
 
 class BuildTableLayout extends Table
 {
+    /** @inerhitDoc  */
+    protected $template = 'layouts.build.table';
+
     /**
      * Data source.
      *

@@ -56,18 +56,21 @@ class ProcessDBClientFile implements ShouldQueue
             $this->processManifestInterfaceTOCData($dbClientFileService, $listFileService),
         );
 
+        $now = now()->toDateTimeString();
+
         foreach (array_chunk($generatedListFile, self::QUERY_BUFFER_SIZE, true) as $chunk) {
             $queryBuffer = [];
             foreach ($chunk as $fileId => $path) {
                 $queryBuffer[] = [
-                    'id'       => $fileId,
-                    'path'     => $path,
-                    'type'     => pathinfo($path, PATHINFO_EXTENSION),
-                    'verified' => true
+                    'id'            => $fileId,
+                    'path'          => $path,
+                    'type'          => pathinfo($path, PATHINFO_EXTENSION),
+                    'verified'      => true,
+                    'pathDiscovery' => $now,
                 ];
             }
 
-            ListFile::upsert($queryBuffer, ['path'], ['path', 'type', 'verified']);
+            ListFile::upsert($queryBuffer, ['path'], ['path', 'type', 'verified', 'pathDiscovery']);
         }
 
         $this->markAsProcessed();

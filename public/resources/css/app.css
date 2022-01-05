@@ -12,6 +12,7 @@
     font-size: 12px;
     font-family: monospace;
     color: #000 !important;
+    text-shadow: none;
 }
 
 #website-logo {
@@ -27,6 +28,10 @@
         height: 80px;
         background-image: url("/resources/image/logo.png");
     }
+}
+
+table tr.new > td > div {
+    color: #11a92b !important;
 }
 
 .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl, .container-full {

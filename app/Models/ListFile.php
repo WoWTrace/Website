@@ -23,6 +23,7 @@ use Orchid\Screen\AsSource;
  * @property int|null $userId
  * @property string|null $lookup
  * @property bool $verified
+ * @property Carbon|null $pathDiscovery
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection|ListFileVersion[] $versions
@@ -58,11 +59,10 @@ final class ListFile extends Model
 
     /** @inerhitDoc */
     protected $casts = [
-        'verified'   => 'boolean',
-        'encrypted'  => 'boolean',
-        'processed'  => 'boolean',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'verified'      => 'boolean',
+        'pathDiscovery' => 'datetime',
+        'created_at'    => 'datetime',
+        'updated_at'    => 'datetime',
     ];
 
     /**
