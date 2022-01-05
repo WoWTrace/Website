@@ -36,14 +36,14 @@ class ProcessRoot implements ShouldQueue
      */
     public $timeout = 1800;
 
-    public function __construct(private Build $build)
+    public function __construct(private Build $build, private $force = false)
     {
         //
     }
 
     public function handle(TactService $tactService): void
     {
-        if ($this->alreadyProcessed()) {
+        if (!$this->force && $this->alreadyProcessed()) {
             return;
         }
 
@@ -57,6 +57,7 @@ class ProcessRoot implements ShouldQueue
 
         $listFileQuery        = ListFile::query();
         $listFileVersionQuery = ListFileVersion::query();
+
         foreach ($root->all() as $fileId => $rootEntry) {
             $encodingMap = $tactService->getEncodingContentMapWithBuild($rootEntry['contentHash'], $this->build, true);
 
@@ -87,7 +88,7 @@ class ProcessRoot implements ShouldQueue
         $this->saveQueryBuffer($listFileQuery, $listFileVersionQuery, $queryList);
         $this->markAsProcessed();
 
-        ProcessDBClientFile::dispatch($this->build);
+        //ProcessDBClientFile::dispatch($this->build);
     }
 
     private function saveQueryBuffer(Builder $listFileQuery, Builder $listFileVersionQuery, array &$queryBuffer)

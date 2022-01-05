@@ -14,8 +14,9 @@ trait BuildProcessor
 
     public function markAsProcessed(): void
     {
-        $this->build->processedBy[] = static::class;
-        $this->build->processedBy   = array_unique($this->build->processedBy);
+        $processedBuilds = $this->build->processedBy;
+        $processedBuilds[] = static::class;
+        $this->build->processedBy = array_unique($processedBuilds);
         $this->build->update();
     }
 }
