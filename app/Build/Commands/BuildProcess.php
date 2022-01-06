@@ -48,10 +48,10 @@ class BuildProcess extends Command
         /** @var Build $build */
         foreach ($builds as $build) {
             $this->info(sprintf('Process executable to get compiled at form build %s.%u', $build->patch, $build->clientBuild));
-            ProcessExecutableGetCompiledAt::dispatchSync($build, true);
+            ProcessExecutableGetCompiledAt::dispatch($build, true);
 
             $this->info(sprintf('Process root for build %s.%u', $build->patch, $build->clientBuild));
-            ProcessRoot::dispatchSync($build, true);
+            ProcessRoot::dispatch($build, true);
 
             echo "\n";
         }
