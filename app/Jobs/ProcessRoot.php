@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class ProcessRoot implements ShouldQueue
 {
@@ -93,8 +94,15 @@ class ProcessRoot implements ShouldQueue
 
     private function saveQueryBuffer(Builder $listFileQuery, Builder $listFileVersionQuery, array &$queryBuffer)
     {
-        $listFileQuery->insertOrIgnore(array_column($queryBuffer, 'listfile'));
+        $listFileQuery->upsert(
+            array_column($queryBuffer, 'listfile'),
+            ['id'],
+            ['lookup' => DB::raw('IF(values(`lookup`) IS NOT NULL, values(`lookup`), `lookup`)')]
+        );
+
+        $listFileQuery->update(array_column($queryBuffer, 'listfile'));
         $listFileVersionQuery->insertOrIgnore(array_column($queryBuffer, 'listfileVersion'));
+
         $queryBuffer = [];
     }
 
