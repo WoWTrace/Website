@@ -102,7 +102,7 @@ final class Build extends Model
      */
     protected $allowedFilters = [
         'patch',
-        'build'
+        'clientBuild'
     ];
 
     /**
@@ -111,7 +111,7 @@ final class Build extends Model
      * @var array
      */
     protected $allowedSorts = [
-        'build',
+        'clientBuild',
         'compiledAt',
         'created_at'
     ];
