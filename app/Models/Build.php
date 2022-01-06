@@ -112,6 +112,7 @@ final class Build extends Model
      */
     protected $allowedSorts = [
         'build',
+        'compiledAt',
         'created_at'
     ];
 
