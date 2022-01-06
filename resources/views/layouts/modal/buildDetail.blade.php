@@ -14,8 +14,12 @@
             <td>{{$productName ?? __('Unknown')}} ({{$product ?? __('Unknown')}})</td>
         </tr>
         <tr>
-            <td>Detected at</td>
+            <td>Detected at (CEST)</td>
             <td>{{$detected ?? __('Unknown')}}</td>
+        </tr>
+        <tr>
+            <td>Compiled at (PT)</td>
+            <td>{{$compiledAt ?? __('Unknown')}}</td>
         </tr>
         </tbody>
     </table>
@@ -80,11 +84,13 @@
             <td><span class="badge bg-secondary hash">{{$downloadContentHash ?? __('Unknown')}}</span></td>
             <td><span class="badge bg-success hash">{{$downloadCdnHash ?? __('Unknown')}}</span></td>
         </tr>
+        @if(($sizeContentHash ?? false) && ($sizeCdnHash ?? false))
         <tr>
             <td><b>Size</b></td>
             <td><b class="badge bg-secondary hash">{{$sizeContentHash ?? __('Unknown')}}</b></td>
             <td><b class="badge bg-success hash">{{$sizeCdnHash ?? __('Unknown')}}</b></td>
         </tr>
+        @endif
         </tbody>
     </table>
 </div>

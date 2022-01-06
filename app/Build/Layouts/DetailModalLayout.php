@@ -66,6 +66,7 @@ class DetailModalLayout extends Layout
                 'patchConfig'   => $this->target->patchConfig,
                 'productConfig' => $this->target->productConfig,
                 'detected'      => $this->target->created_at->format('Y-m-d H:i:s'),
+                'compiledAt'    => $this->target->compiledAt?->format('Y-m-d H:i:s'),
 
                 'encodingContentHash' => $this->target->encodingContentHash,
                 'encodingCdnHash'     => $this->target->encodingCdnHash,
