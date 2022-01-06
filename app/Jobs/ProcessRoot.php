@@ -97,11 +97,9 @@ class ProcessRoot implements ShouldQueue, ShouldBeUnique
     {
         $listFileQuery->upsert(
             array_column($queryBuffer, 'listfile'),
-            ['id'],
+            'id',
             ['lookup' => DB::raw('IF(values(`lookup`) IS NOT NULL, values(`lookup`), `lookup`)')]
         );
-
-        $listFileQuery->update(array_column($queryBuffer, 'listfile'));
         $listFileVersionQuery->insertOrIgnore(array_column($queryBuffer, 'listfileVersion'));
 
         $queryBuffer = [];
