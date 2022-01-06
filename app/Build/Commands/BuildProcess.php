@@ -2,6 +2,7 @@
 
 namespace App\Build\Commands;
 
+use App\Jobs\ProcessExecutableGetCompiledAt;
 use App\Jobs\ProcessRoot;
 use App\Models\Build;
 use Illuminate\Console\Command;
@@ -46,7 +47,13 @@ class BuildProcess extends Command
 
         /** @var Build $build */
         foreach ($builds as $build) {
+            $this->info(sprintf('Process executable to get compiled at form build %s.%u', $build->patch, $build->clientBuild));
+            ProcessExecutableGetCompiledAt::dispatchSync($build, true);
+
+            $this->info(sprintf('Process root for build %s.%u', $build->patch, $build->clientBuild));
             ProcessRoot::dispatchSync($build, true);
+
+            echo "\n";
         }
 
         return Command::SUCCESS;

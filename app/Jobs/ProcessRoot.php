@@ -10,6 +10,7 @@ use App\Models\Build;
 use App\Models\ListFile;
 use App\Models\ListFileVersion;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,7 +18,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 
-class ProcessRoot implements ShouldQueue
+class ProcessRoot implements ShouldQueue, ShouldBeUnique
 {
     use BuildProcessor, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -104,6 +105,16 @@ class ProcessRoot implements ShouldQueue
         $listFileVersionQuery->insertOrIgnore(array_column($queryBuffer, 'listfileVersion'));
 
         $queryBuffer = [];
+    }
+
+    /**
+     * The unique ID of the job.
+     *
+     * @return string|int
+     */
+    public function uniqueId()
+    {
+        return $this->build->id;
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Build\Commands;
 
 use App\Common\Services\TactService;
+use App\Jobs\ProcessExecutableGetCompiledAt;
 use App\Jobs\ProcessRoot;
 use App\Models\Build;
 use App\Models\Product;
@@ -103,6 +104,8 @@ class BuildCrawl extends Command
                 'sizeContentHash'     => $buildConfig->getByKey('size')[0],
                 'sizeCdnHash'         => $buildConfig->getByKey('size')[1],
             ]);
+
+            ProcessExecutableGetCompiledAt::dispatch($build);
 
             if (!$this->option('withoutProcessRoot')) {
                 ProcessRoot::dispatch($build);

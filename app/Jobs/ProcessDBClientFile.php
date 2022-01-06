@@ -12,12 +12,13 @@ use App\Models\Build;
 use App\Models\ListFile;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProcessDBClientFile implements ShouldQueue
+class ProcessDBClientFile implements ShouldQueue, ShouldBeUnique
 {
     use BuildProcessor, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -163,5 +164,15 @@ class ProcessDBClientFile implements ShouldQueue
         }
 
         return $generatedListFile;
+    }
+
+    /**
+     * The unique ID of the job.
+     *
+     * @return string|int
+     */
+    public function uniqueId()
+    {
+        return $this->build->id;
     }
 }

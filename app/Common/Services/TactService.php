@@ -69,7 +69,9 @@ final class TactService
                 $versionConfig->getCDNPath(),
                 $buildConfig->encoding[1],
                 true,
-                $preloadEncoding
+                $preloadEncoding,
+                null,
+                $buildConfig->encoding[0],
             );
         } catch (Throwable $throwable) {
             throw new TactException(sprintf("Failed to download encoding for product %s\n%s", $product, $throwable->getMessage()));
@@ -109,37 +111,6 @@ final class TactService
         });
     }
 
-    public function getEncodingContentMapWithBuild(string $contentHash, Build $build, bool $preloadEncoding = false): ?ContentMap
-    {
-        $encoding = $this->getEncodingByBuild($build, $preloadEncoding);
-        return $encoding->getContentMap(hex2bin($contentHash));
-    }
-
-    public function getEncodingByBuild(Build $build, bool $preloadEncoding = false): Encoding
-    {
-        $cacheKey = sprintf('tact-encoding-%s%s', $build->encodingCdnHash, $preloadEncoding ? '-preloaded' : '');
-        if (!empty(self::$instanceCache[$cacheKey])) {
-            return self::$instanceCache[$cacheKey];
-        }
-
-        $versionConfig = $this->getVersionConfig($build->productKey);
-
-        try {
-            $encoding = new Encoding(
-                $this->cache,
-                $versionConfig->getServers(),
-                $versionConfig->getCDNPath(),
-                $build->encodingCdnHash,
-                true,
-                $preloadEncoding
-            );
-        } catch (Throwable $throwable) {
-            throw new TactException(sprintf("Failed to download encoding for product %s with build config key %s\n%s", $build->productKey, $build->buildConfig, $throwable->getMessage()));
-        }
-
-        return self::$instanceCache[$cacheKey] = $encoding;
-    }
-
     public function downloadFileByNameOrId(string $nameOrId, string $destPath, string $product, string $region = self::DEFAULT_REGION, ?string $locale = null): bool
     {
         $contentHash = $this->getContentHash($nameOrId, $product, $region, $locale);
@@ -155,23 +126,6 @@ final class TactService
         }
 
         return $this->downloadFileByContentHash($contentHash, $destPath, $product, $region);
-    }
-
-    public function downloadFileByNameOrIdWithBuild(string $nameOrId, string $destPath, Build $build, ?string $locale = null): bool
-    {
-        $contentHash = $this->getContentHashWithBuild($nameOrId, $build);
-
-        if (is_null($contentHash)) {
-            return false;
-        }
-
-        $contentHash = bin2hex($contentHash);
-
-        if (file_exists($destPath) && md5_file($destPath) === $contentHash) {
-            return true;
-        }
-
-        return $this->downloadFileByContentHashWithBuild($contentHash, $destPath, $build);
     }
 
     public function getContentHash(string $nameOrId, string $product, string $region = self::DEFAULT_REGION, ?string $locale = null): ?string
@@ -194,27 +148,7 @@ final class TactService
         return $contentHash;
     }
 
-    public function getContentHashWithBuild(string $nameOrId, Build $build, ?string $locale = null): ?string
-    {
-        /** @var Manifest[] $nameSources */
-        $nameSources = [
-            $this->getInstallByBuild($build),
-            $this->getRootByBuild($build),
-        ];
-
-        $this->downloadTactKeys();
-
-        $contentHash = null;
-        foreach ($nameSources as $nameSource) {
-            if ($contentHash = $nameSource->getContentHash($nameOrId, $locale)) {
-                break;
-            }
-        }
-
-        return $contentHash;
-    }
-
-    private function getInstall(string $product, string $region = self::DEFAULT_REGION): Install
+    public function getInstall(string $product, string $region = self::DEFAULT_REGION): Install
     {
         return LaravelCache::remember(sprintf('tact-install-%s-%s', $product, $region), 60 * CarbonInterface::SECONDS_PER_MINUTE, function () use ($product, $region): Install {
             $versionConfig = $this->getVersionConfig($product, $region);
@@ -229,31 +163,12 @@ final class TactService
                     $this->cache,
                     $versionConfig->getServers(),
                     $versionConfig->getCDNPath(),
-                    $buildConfig->getByKey('install')[1]
+                    $buildConfig->getByKey('install')[1],
+                    null,
+                    $buildConfig->getByKey('install')[0]
                 );
             } catch (Throwable $throwable) {
                 throw new TactException(sprintf("Failed to download root for product %s\n%s", $product, $throwable->getMessage()));
-            }
-
-            return $install;
-        });
-    }
-
-    private function getInstallByBuild(Build $build): Install
-    {
-        return LaravelCache::remember(sprintf('tact-install-%s', $build->installCdnHash), 60 * CarbonInterface::SECONDS_PER_MINUTE, function () use ($build): Install {
-            $versionConfig = $this->getVersionConfig($build->productKey);
-
-
-            try {
-                $install = new Install(
-                    $this->cache,
-                    $versionConfig->getServers(),
-                    $versionConfig->getCDNPath(),
-                    $build->installCdnHash
-                );
-            } catch (Throwable $throwable) {
-                throw new TactException(sprintf("Failed to download root for product %s with build config key %s\n%s", $build->productKey, $build->buildConfig, $throwable->getMessage()));
             }
 
             return $install;
@@ -280,7 +195,10 @@ final class TactService
                 $this->cache,
                 $versionConfig->getServers(),
                 $versionConfig->getCDNPath(),
-                bin2hex($rootEncodingMapping->getEncodedHashes()[0])
+                bin2hex($rootEncodingMapping->getEncodedHashes()[0]),
+                'enUS',
+                null,
+                $buildConfig->getByKey('root')[0]
             );
         } catch (Throwable $throwable) {
             throw new TactException(sprintf("Failed to download root for product %s\n%s", $product, $throwable->getMessage()));
@@ -319,7 +237,7 @@ final class TactService
         return count($keys);
     }
 
-    private function downloadFileByContentHash(string $contentHash, string $destPath, string $product, string $region = self::DEFAULT_REGION): bool
+    public function downloadFileByContentHash(string $contentHash, string $destPath, string $product, string $region = self::DEFAULT_REGION): bool
     {
         $contentMap = $this->getEncodingContentMap($contentHash, $product, $region);
         if (!$contentMap) {
@@ -327,30 +245,6 @@ final class TactService
         }
 
         $dataSource = $this->getTact($product, $region);
-
-        foreach ($contentMap->getEncodedHashes() as $hash) {
-            try {
-                if ($location = $dataSource->findHashInIndexes($hash)) {
-                    if ($dataSource->extractFile($location, $destPath)) {
-                        return true;
-                    }
-                }
-            } catch (Exception) {
-                //
-            }
-        }
-
-        return false;
-    }
-
-    private function downloadFileByContentHashWithBuild(string $contentHash, string $destPath, Build $build): bool
-    {
-        $contentMap = $this->getEncodingContentMapWithBuild($contentHash, $build);
-        if (!$contentMap) {
-            return false;
-        }
-
-        $dataSource = $this->getTact($build->productKey);
 
         foreach ($contentMap->getEncodedHashes() as $hash) {
             try {
@@ -395,6 +289,66 @@ final class TactService
         });
     }
 
+    public function downloadFileByNameOrIdWithBuild(string $nameOrId, string $destPath, Build $build, ?string $locale = null): bool
+    {
+        $contentHash = $this->getContentHashWithBuild($nameOrId, $build);
+
+        if (is_null($contentHash)) {
+            return false;
+        }
+
+        $contentHash = bin2hex($contentHash);
+
+        if (file_exists($destPath) && md5_file($destPath) === $contentHash) {
+            return true;
+        }
+
+        return $this->downloadFileByContentHashWithBuild($contentHash, $destPath, $build);
+    }
+
+    public function getContentHashWithBuild(string $nameOrId, Build $build, ?string $locale = null): ?string
+    {
+        /** @var Manifest[] $nameSources */
+        $nameSources = [
+            $this->getInstallByBuild($build),
+            $this->getRootByBuild($build),
+        ];
+
+        $this->downloadTactKeys();
+
+        $contentHash = null;
+        foreach ($nameSources as $nameSource) {
+            if ($contentHash = $nameSource->getContentHash($nameOrId, $locale)) {
+                break;
+            }
+        }
+
+        return $contentHash;
+    }
+
+    public function getInstallByBuild(Build $build): Install
+    {
+        return LaravelCache::remember(sprintf('tact-install-%s', $build->installCdnHash), 60 * CarbonInterface::SECONDS_PER_MINUTE, function () use ($build): Install {
+            $versionConfig = $this->getVersionConfig($build->productKey);
+
+
+            try {
+                $install = new Install(
+                    $this->cache,
+                    $versionConfig->getServers(),
+                    $versionConfig->getCDNPath(),
+                    $build->installCdnHash,
+                    null,
+                    $build->installContentHash
+                );
+            } catch (Throwable $throwable) {
+                throw new TactException(sprintf("Failed to download root for product %s with build config key %s\n%s", $build->productKey, $build->buildConfig, $throwable->getMessage()));
+            }
+
+            return $install;
+        });
+    }
+
     public function getRootByBuild(Build $build): Root
     {
         $cacheKey = sprintf('tact-root-%s', $build->rootCdnHash);
@@ -409,12 +363,72 @@ final class TactService
                 $this->cache,
                 $versionConfig->getServers(),
                 $versionConfig->getCDNPath(),
-                $build->rootCdnHash
+                $build->rootCdnHash,
+                'enUS',
+                null,
+                $build->rootContentHash
             );
         } catch (Throwable $throwable) {
             throw new TactException(sprintf("Failed to download root for product %s with build config key %s\n%s", $build->productKey, $build->buildConfig, $throwable->getMessage()));
         }
 
         return self::$instanceCache[$cacheKey] = $root;
+    }
+
+    public function downloadFileByContentHashWithBuild(string $contentHash, string $destPath, Build $build): bool
+    {
+        $contentMap = $this->getEncodingContentMapWithBuild($contentHash, $build);
+        if (!$contentMap) {
+            return false;
+        }
+
+        $dataSource = $this->getTact($build->productKey);
+
+        foreach ($contentMap->getEncodedHashes() as $hash) {
+            try {
+                if ($location = $dataSource->findHashInIndexes($hash)) {
+                    if ($dataSource->extractFile($location, $destPath)) {
+                        return true;
+                    }
+                }
+            } catch (Exception) {
+                //
+            }
+        }
+
+        return false;
+    }
+
+    public function getEncodingContentMapWithBuild(string $contentHash, Build $build, bool $preloadEncoding = false): ?ContentMap
+    {
+        $encoding = $this->getEncodingByBuild($build, $preloadEncoding);
+        return $encoding->getContentMap(hex2bin($contentHash));
+    }
+
+    public function getEncodingByBuild(Build $build, bool $preloadEncoding = false): Encoding
+    {
+        $cacheKey = sprintf('tact-encoding-%s%s', $build->encodingCdnHash, $preloadEncoding ? '-preloaded' : '');
+        if (!empty(self::$instanceCache[$cacheKey])) {
+            return self::$instanceCache[$cacheKey];
+        }
+
+        $versionConfig = $this->getVersionConfig($build->productKey);
+
+        try {
+            $encoding = new Encoding(
+                $this->cache,
+                $versionConfig->getServers(),
+                $versionConfig->getCDNPath(),
+                $build->encodingCdnHash,
+                true,
+                $preloadEncoding,
+                null,
+                $build->encodingContentHash
+            );
+        } catch (Throwable $throwable) {
+            throw new TactException(sprintf("Failed to download encoding for product %s with build config key %s\n%s", $build->productKey, $build->buildConfig, $throwable->getMessage()));
+        }
+
+        return self::$instanceCache[$cacheKey] = $encoding;
     }
 }
