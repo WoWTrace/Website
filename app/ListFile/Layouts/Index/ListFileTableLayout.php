@@ -98,7 +98,7 @@ class ListFileTableLayout extends Table
                         return $span;
                     });
 
-                    return DropDown::make(sprintf(__(sprintf('%u Versions', $listFile->versions->count()))))
+                    return DropDown::make(sprintf(__(sprintf('%u Versions', $versions->count()))))
                         ->list($versionList->toArray());
                 }),
 
