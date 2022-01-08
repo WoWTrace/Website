@@ -81,8 +81,8 @@ class ListFileTableLayout extends Table
                         return $span;
                     }
 
-                    $versionList = $versions->map(static function (ListFileVersion $listFileVersion): Span {
-                        $versionBuild = $listFileVersion->build;
+                    $versionList = $versions->map(static function ($listFileVersion): Span {
+                        $versionBuild = $listFileVersion->first()->build;
 
                         $span = Span::make(sprintf(
                             '%s.%u (%s)',
@@ -91,7 +91,7 @@ class ListFileTableLayout extends Table
                             $versionBuild->product->badgeText
                         ));
 
-                        if ($listFileVersion->encrypted) {
+                        if ($listFileVersion->first()->encrypted) {
                             return $span->icon('lock');
                         }
 
