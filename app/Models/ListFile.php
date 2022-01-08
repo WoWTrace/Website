@@ -91,6 +91,8 @@ final class ListFile extends Model
 
     public function versions(): HasMany
     {
-        return $this->hasMany(ListFileVersion::class, 'id', 'id');
+        return $this
+            ->hasMany(ListFileVersion::class, 'id', 'id')
+            ->orderBy('clientBuild');
     }
 }

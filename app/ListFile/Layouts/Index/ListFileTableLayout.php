@@ -54,11 +54,14 @@ class ListFileTableLayout extends Table
                 ->width(200)
                 ->sort()
                 ->render(static function (ListFile $listFile) {
-                    if ($listFile->versions->isEmpty()) {
+                    $versions = $listFile->versions
+                        ->groupBy('contentHash');
+
+                    if ($versions->isEmpty()) {
                         return 'No versions available';
                     }
 
-                    if ($listFile->versions->count() === 1) {
+                    if ($versions->count() === 1) {
                         /** @var ListFileVersion $listFileVersion */
                         $listFileVersion = $listFile->versions->first();
 
@@ -78,7 +81,7 @@ class ListFileTableLayout extends Table
                         return $span;
                     }
 
-                    $versionList = $listFile->versions->sortByDesc('clientBuild')->map(static function (ListFileVersion $listFileVersion): Span {
+                    $versionList = $versions->map(static function (ListFileVersion $listFileVersion): Span {
                         $versionBuild = $listFileVersion->build;
 
                         $span = Span::make(sprintf(

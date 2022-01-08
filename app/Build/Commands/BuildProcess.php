@@ -47,8 +47,8 @@ class BuildProcess extends Command
 
         /** @var Build $build */
         foreach ($builds as $build) {
-            ProcessExecutableGetCompiledAt::dispatch($build, true);
-            ProcessRoot::dispatch($build, true);
+            ProcessExecutableGetCompiledAt::dispatchSync($build, true);
+            ProcessRoot::dispatchSync($build, true);
         }
 
         return Command::SUCCESS;
