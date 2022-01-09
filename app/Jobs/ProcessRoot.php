@@ -8,6 +8,7 @@ use App\Build\Helper\BuildProcessor;
 use App\Common\Services\TactService;
 use App\Models\Build;
 use App\Models\ListFile;
+use App\Models\ListFileBuilds;
 use App\Models\ListFileVersion;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -59,6 +60,7 @@ class ProcessRoot implements ShouldQueue, ShouldBeUnique
 
         $listFileQuery        = ListFile::query();
         $listFileVersionQuery = ListFileVersion::query();
+        $listFileBuildsQuery  = ListFileBuilds::query();
 
         foreach ($root->all() as $fileId => $rootEntry) {
             $encodingMap = $tactService->getEncodingContentMapWithBuild($rootEntry['contentHash'], $this->build, true);
@@ -71,29 +73,33 @@ class ProcessRoot implements ShouldQueue, ShouldBeUnique
                     'updated_at' => $now->toDateTimeString(),
                 ],
                 'listfileVersion' => [
-                    'id'          => $fileId,
-                    'contentHash' => $rootEntry['contentHash'],
-                    'encrypted'   => $rootEntry['encrypted'] ?? false,
-                    'fileSize'    => $encodingMap?->getFileSize() ?? null,
-                    'buildId'     => $buildId,
-                    'clientBuild' => $clientBuild,
-                    'created_at'  => $now->toDateTimeString(),
-                    'updated_at'  => $now->toDateTimeString(),
-                ]
+                    'id'           => $fileId,
+                    'contentHash'  => $rootEntry['contentHash'],
+                    'encrypted'    => $rootEntry['encrypted'] ?? false,
+                    'fileSize'     => $encodingMap?->getFileSize() ?? null,
+                    'firstBuildId' => $buildId,
+                    'clientBuild'  => $clientBuild,
+                    'created_at'   => $now->toDateTimeString(),
+                    'updated_at'   => $now->toDateTimeString(),
+                ],
+                'listfileBuilds'  => [
+                    'id'      => $fileId,
+                    'buildId' => $buildId,
+                ],
             ];
 
             if (count($queryList) >= self::QUERY_BUFFER_SIZE) {
-                $this->saveQueryBuffer($listFileQuery, $listFileVersionQuery, $queryList);
+                $this->saveQueryBuffer($listFileQuery, $listFileVersionQuery, $listFileBuildsQuery, $queryList);
             }
         }
 
-        $this->saveQueryBuffer($listFileQuery, $listFileVersionQuery, $queryList);
+        $this->saveQueryBuffer($listFileQuery, $listFileVersionQuery, $listFileBuildsQuery, $queryList);
         $this->markAsProcessed();
 
         //ProcessDBClientFile::dispatch($this->build);
     }
 
-    private function saveQueryBuffer(Builder $listFileQuery, Builder $listFileVersionQuery, array &$queryBuffer)
+    private function saveQueryBuffer(Builder $listFileQuery, Builder $listFileVersionQuery, Builder $listFileBuildsQuery, array &$queryBuffer)
     {
         $listFileQuery->upsert(
             array_column($queryBuffer, 'listfile'),
@@ -101,6 +107,7 @@ class ProcessRoot implements ShouldQueue, ShouldBeUnique
             ['lookup' => DB::raw('IF(values(`lookup`) IS NOT NULL, values(`lookup`), `lookup`)')]
         );
         $listFileVersionQuery->insertOrIgnore(array_column($queryBuffer, 'listfileVersion'));
+        $listFileBuildsQuery->insertOrIgnore(array_column($queryBuffer, 'listfileBuilds'));
 
         $queryBuffer = [];
     }

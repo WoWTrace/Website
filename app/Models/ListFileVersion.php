@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property bool $encrypted
  * @property int|null $fileSize
  * @property bool $processed
- * @property int $buildId
+ * @property int $firstBuildId
  * @property int $clientBuild
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

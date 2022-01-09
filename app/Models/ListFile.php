@@ -26,6 +26,8 @@ use Orchid\Screen\AsSource;
  * @property Carbon|null $pathDiscovery
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Collection|ListFileBuilds[] $builds
+ * @property-read int|null $builds_count
  * @property-read Collection|ListFileVersion[] $versions
  * @property-read int|null $versions_count
  * @method static Builder|ListFile defaultSort(string $column, string $direction = 'asc')
@@ -88,6 +90,11 @@ final class ListFile extends Model
         'type',
         'lookup',
     ];
+
+    public function builds(): HasMany
+    {
+        return $this->hasMany(ListFileBuilds::class, 'id', 'id');
+    }
 
     public function versions(): HasMany
     {

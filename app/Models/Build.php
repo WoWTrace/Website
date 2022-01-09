@@ -40,7 +40,7 @@ use Orchid\Screen\AsSource;
  * @property string|null $sizeCdnHash
  * @property bool $custom Builds which contains custom generated configs
  * @property Carbon|null $compiledAt Compile time of the Wow.exe
- * @property array<string> $processedBy List of process class names which processed this build
+ * @property array $processedBy List of process class names which processed this build
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Product $product
