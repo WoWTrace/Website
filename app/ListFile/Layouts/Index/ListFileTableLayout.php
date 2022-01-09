@@ -54,8 +54,7 @@ class ListFileTableLayout extends Table
                 ->width(200)
                 ->sort()
                 ->render(static function (ListFile $listFile) {
-                    $versions = $listFile->versions
-                        ->groupBy('contentHash');
+                    $versions = $listFile->versions;
 
                     if ($versions->isEmpty()) {
                         return 'No versions available';
@@ -65,13 +64,13 @@ class ListFileTableLayout extends Table
                         /** @var ListFileVersion $listFileVersion */
                         $listFileVersion = $listFile->versions->first();
 
-                        $versionBuild = $listFileVersion->build;
+                        $firstBuildVersion = $listFileVersion->firstBuild;
 
                         $span = Span::make(sprintf(
                             '%s.%u (%s)',
-                            $versionBuild->patch,
-                            $versionBuild->clientBuild,
-                            $versionBuild->product->badgeText
+                            $firstBuildVersion->patch,
+                            $firstBuildVersion->clientBuild,
+                            $firstBuildVersion->product->badgeText
                         ));
 
                         if ($listFileVersion->encrypted) {
@@ -82,7 +81,7 @@ class ListFileTableLayout extends Table
                     }
 
                     $versionList = $versions->map(static function ($listFileVersion): Span {
-                        $versionBuild = $listFileVersion->first()->build;
+                        $versionBuild = $listFileVersion->firstBuild;
 
                         $span = Span::make(sprintf(
                             '%s.%u (%s)',

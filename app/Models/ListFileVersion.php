@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
  * @property int $clientBuild
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Build $build
+ * @property-read Build $firstBuild
  * @method static Builder|ListFileVersion newModelQuery()
  * @method static Builder|ListFileVersion newQuery()
  * @method static Builder|ListFileVersion query()
@@ -50,8 +50,8 @@ final class ListFileVersion extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function build(): BelongsTo
+    public function firstBuild(): BelongsTo
     {
-        return $this->belongsTo(Build::class, 'buildId', 'id');
+        return $this->belongsTo(Build::class, 'firstBuildId', 'id');
     }
 }
