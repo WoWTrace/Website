@@ -9,19 +9,9 @@ final class ListFileService
     public const MAX_ROWS_PER_REQUEST = 10000;
     public const PATH_REGEX = '/(\d+;[a-z0-9\/\\\\.\-_ \(\)]+$)/im';
 
-    // Cache blizzard user id
-    public static int $blizzardUserId = 0;
-
     public static function getBlizzardUserId()
     {
-        if (!empty(self::$blizzardUserId)) {
-            return self::$blizzardUserId;
-        }
-
-        if ($user = User::firstWhere('email', config('listfile.sourceUserEmail'))) {
-            return self::$blizzardUserId = (int)$user->id;
-        }
-
+        // @TODO Remove after cleanup
         return 0;
     }
 

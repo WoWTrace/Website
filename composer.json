@@ -19,7 +19,6 @@
         "jdavidbakr/laravel-cache-garbage-collector": "^1.1",
         "laravel/framework": "^8.70",
         "laravel/tinker": "^2.6",
-        "luzifix/casc": "dev-master",
         "myclabs/php-enum": "^1.8",
         "orchid/platform": "^10.26",
         "symfony/http-foundation": "^5.2",

@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             ProductSeeder::class,
-            ListFileSeeder::class,
         ]);
     }
 }

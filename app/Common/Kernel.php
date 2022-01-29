@@ -17,9 +17,6 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule): void
     {
-        // Builds
-        $schedule->command('build:crawl')->everyTenMinutes();
-
         // Cleanup expired laravel cache
         $schedule->command('cache:gc')->everyTwoHours();
     }
@@ -27,11 +24,7 @@ class Kernel extends ConsoleKernel
     protected function commands(): void
     {
         $this->load([
-            __DIR__ . '/Commands',
             __DIR__ . '/../Home/Commands',
-            __DIR__ . '/../ListFile/Commands',
-            __DIR__ . '/../Build/Commands',
-            __DIR__ . '/../DBClientFile/Commands',
         ]);
     }
 }

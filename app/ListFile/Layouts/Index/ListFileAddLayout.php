@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ListFile\Layouts\Index;
 
-use App\Models\ListFile;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Rows;
@@ -18,11 +17,6 @@ class ListFileAddLayout extends Rows
      */
     public function fields(): array
     {
-        $maxId = ListFile::query()->max('id');
-        if ($maxId) {
-            $maxId += 1;
-        }
-
         return [
             Input::make('listfile.id')
                 ->type('number')
@@ -30,8 +24,7 @@ class ListFileAddLayout extends Rows
                 ->max(2147483647)
                 ->required()
                 ->title(__('FD ID'))
-                ->placeholder('1')
-                ->value(max($maxId ?? 0, config('listfile.customIdStart'))),
+                ->placeholder('1'),
 
             Input::make('listfile.path')
                 ->type('text')
