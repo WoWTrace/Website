@@ -12,7 +12,6 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "darkaonline/l5-swagger": "^8.0",
-        "erorus/db2": "dev-master",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -58,16 +57,6 @@
             "Tests\\": "tests/"
         }
     },
-    "repositories": [
-        {
-            "url": "https://github.com/Luzifix/casc.git",
-            "type": "git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/erorus/db2"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
