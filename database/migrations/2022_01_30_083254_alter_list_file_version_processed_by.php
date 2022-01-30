@@ -13,7 +13,6 @@ class AlterListFileVersionProcessedBy extends Migration
         Schema::table('listfile_version', function (Blueprint $table): void {
             $table->dropColumn('processed');
             $table->json('processedBy')
-                ->default('[]')
                 ->after('fileSize')
                 ->comment('List of process class names which processed this build');
         });

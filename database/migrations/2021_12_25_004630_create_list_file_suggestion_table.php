@@ -20,6 +20,8 @@ class CreateListFileSuggestionTable extends Migration
             $table->timestamp('reviewedAt')->nullable();
             $table->timestamps();
 
+            $table->primary(['id', 'userId', 'path']);
+
             $table->foreign('userId')
                 ->references('id')
                 ->on('users')
@@ -31,8 +33,6 @@ class CreateListFileSuggestionTable extends Migration
                 ->on('users')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
-
-            $table->primary(['id', 'userId', 'path']);
         });
     }
 

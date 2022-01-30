@@ -28,6 +28,8 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Litespeed\LSCache\LSCacheMiddleware;
+use Litespeed\LSCache\LSTagsMiddleware;
 
 class Kernel extends HttpKernel
 {
@@ -47,6 +49,9 @@ class Kernel extends HttpKernel
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,
         Convert422To400::class,
+
+        LSCacheMiddleware::class,
+        LSTagsMiddleware::class,
     ];
 
     /**
@@ -88,5 +93,8 @@ class Kernel extends HttpKernel
         'signed'           => ValidateSignature::class,
         'throttle'         => ThrottleRequests::class,
         'verified'         => EnsureEmailIsVerified::class,
+
+        'lscache'          => LSCacheMiddleware::class,
+        'lstags'           => LSTagsMiddleware::class,
     ];
 }
