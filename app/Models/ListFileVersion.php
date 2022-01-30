@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $contentHash
  * @property bool $encrypted
  * @property int|null $fileSize
- * @property bool $processed
+ * @property array $processedBy List of process class names which processed this build
  * @property int $firstBuildId
  * @property int $clientBuild
  * @property Carbon|null $created_at
@@ -37,17 +37,17 @@ final class ListFileVersion extends Model
     protected $fillable = [
         'contentHash',
         'encrypted',
-        'processed',
+        'processedBy',
         'buildId',
         'clientBuild',
     ];
 
     /** @inerhitDoc */
     protected $casts = [
-        'encrypted'  => 'boolean',
-        'processed'  => 'boolean',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'encrypted'   => 'boolean',
+        'processedBy' => 'array',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
     ];
 
     public function firstBuild(): BelongsTo

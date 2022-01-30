@@ -56,7 +56,6 @@ final class ListFile extends Model
         'rootCdnHash',
         'verified',
         'encrypted',
-        'processed',
     ];
 
     /** @inerhitDoc */
