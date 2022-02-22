@@ -2,7 +2,7 @@
 
 ## Setup
 1. Copy .env.example to .env
-2. Configuration your settings in .env file
+2. Configure your settings in .env file
 3. Run update.sh
 4. Run php artisan key:generate
 5. Configure your Webserver to serve the public folder
