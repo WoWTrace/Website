@@ -30,7 +30,7 @@
             <tbody>
 
             @foreach($rows as $source)
-                <tr class="{{$source->created_at >= \Carbon\Carbon::now()->subDay() ? 'new' : ''}}">
+                <tr>
                     @foreach($columns as $column)
                         {!! $column->buildTd($source) !!}
                     @endforeach

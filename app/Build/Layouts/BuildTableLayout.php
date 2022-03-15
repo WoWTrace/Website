@@ -4,6 +4,7 @@ namespace App\Build\Layouts;
 
 use App\Common\Screen\TDExtended;
 use App\Models\Build;
+use Carbon\Carbon;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Table;
@@ -36,7 +37,15 @@ class BuildTableLayout extends Table
             TDExtended::make('patch', __('Patch'))
                 ->cantHide()
                 ->minWidth(75)
-                ->filter(Input::make()),
+                ->filter(Input::make())
+                ->render(function (Build $build) {
+                    if ($build->created_at >= Carbon::now()->subDay()) {
+                        return sprintf('<div><b class="badge bg-success">New</b> <span>%s</span></div>',
+                            $build->patch);
+                    }
+
+                    return (string)$build->patch;
+                }),
 
             TDExtended::make('clientBuild', __('Build'))
                 ->sort()
@@ -61,9 +70,27 @@ class BuildTableLayout extends Table
                     );
                 }),
 
-            TD::make('buildConfig', __('Build Config')),
-            TD::make('patchConfig', __('Patch Config')),
-            TD::make('cdnConfig', __('CDN Config')),
+            TD::make('buildConfig', __('Build Config'))
+                ->render(function (Build $build) {
+                    return sprintf(
+                        '<span class="hash">%s</span>',
+                        $build->buildConfig
+                    );
+                }),
+            TD::make('patchConfig', __('Patch Config'))
+                ->render(function (Build $build) {
+                    return sprintf(
+                        '<span class="hash">%s</span>',
+                        $build->patchConfig
+                    );
+                }),
+            TD::make('cdnConfig', __('CDN Config'))
+                ->render(function (Build $build) {
+                    return sprintf(
+                        '<span class="hash">%s</span>',
+                        $build->cdnConfig
+                    );
+                }),
             TD::make('compiledAt', __('Compiled at (PT)'))
                 ->sort()
                 ->render(function (Build $build) {
