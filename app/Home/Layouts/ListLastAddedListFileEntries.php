@@ -36,7 +36,7 @@ class ListLastAddedListFileEntries extends Table
     protected function columns(): array
     {
         return [
-            TD::make('id', __('FD ID'))
+            TD::make('id', __('File ID'))
                 ->alignLeft()
                 ->render(function (ListFile $listFile) {
                     return Span::make($listFile->id)

@@ -127,8 +127,6 @@ class SuggestScreen extends Screen
             ];
         }
 
-        dd(memory_get_usage());
-
         ListFileSuggestion::query()->insertOrIgnore($suggestionQuery);
 
         Toast::info(__('Your ListFile suggestions were saved'));

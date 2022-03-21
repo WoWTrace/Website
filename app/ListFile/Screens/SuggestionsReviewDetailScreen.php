@@ -98,7 +98,6 @@ class SuggestionsReviewDetailScreen extends Screen
         $acceptMode  = ($request->type === 'accept');
         $suggestions = ListFileSuggestion::where('suggestionKey', $request->suggestionKey)
             ->whereNull('accepted')
-            ->where('userId', '!=', $currentUser->id)
             ->cursor();
 
         if ($suggestions->isEmpty()) {
@@ -110,33 +109,31 @@ class SuggestionsReviewDetailScreen extends Screen
         DB::beginTransaction();
         $now = now()->toDateTimeString();
 
-        if (!$acceptMode) {
-            /** @var ListFileSuggestion $suggestion */
-            foreach ($suggestions as $suggestion) {
-                $suggestion->update([
-                    'accepted'       => false,
-                    'reviewerUserId' => $currentUser->id,
-                    'reviewedAt'     => $now
-                ]);
-            }
-
-            // @TODO Notify suggestion sender
-
-            Toast::success(__('ListFile Review successfully completed'));
-            DB::commit();
-
-            return redirect()->route(ListFilePlatform::ROUTE_LISTFILE_SUGGESTIONS_REVIEW_KEY);
-        }
-
-        $listFileQuery = ListFile::query();
-
         /** @var ListFileSuggestion $suggestion */
         foreach ($suggestions as $suggestion) {
+
+            // Users cannot review their own suggestions, only users with the Admin role
+            if ($suggestion->userId == $currentUser->id && !$currentUser->inRole('admin')) {
+                Toast::error(__("You cannot accept/deny your own suggestions!"));
+
+                return redirect()->route(ListFilePlatform::ROUTE_LISTFILE_SUGGESTIONS_REVIEW_KEY);
+            }
+
             $suggestion->update([
-                'accepted'       => true,
+                'accepted'       => $acceptMode,
                 'reviewerUserId' => $currentUser->id,
                 'reviewedAt'     => $now
             ]);
+
+            if ($acceptMode)
+            {
+                $listFile = ListFile::where('id', $suggestion->id);
+                $listFile->update([
+                    'path'      => $suggestion->path,
+                    'type'      => pathinfo($suggestion->path, PATHINFO_EXTENSION),
+                    'userId'    => $suggestion->userId
+                ]);
+            }
         }
 
         Toast::success(__('ListFile Review successfully completed'));

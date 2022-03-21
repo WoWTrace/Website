@@ -34,7 +34,6 @@
                 ->tabindex(1)
                 ->autofocus()
                 ->placeholder(__('Enter your username'))
-                ->value('luzifix')
             !!}
         </div>
 
@@ -48,7 +47,6 @@
                 ->tabindex(2)
                 ->autofocus()
                 ->placeholder(__('Enter your email'))
-                ->value('luzifix19@gmail.com')
             !!}
         </div>
 

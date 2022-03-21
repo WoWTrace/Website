@@ -24,8 +24,8 @@ class ListFileTableLayout extends Table
     protected function columns(): array
     {
         return [
-            TD::make('id', __('FD ID'))
-                ->width(110)
+            TD::make('id', __('File ID'))
+                ->width(130)
                 ->cantHide()
                 ->sort()
                 ->alignLeft()
@@ -47,8 +47,13 @@ class ListFileTableLayout extends Table
             TDExtended::make('lookup', __('Lookup'))
                 ->width(145)
                 ->sort()
-                ->defaultHidden()
-                ->filter(Input::make()),
+                ->filter(Input::make())
+                ->render(static function(ListFile $listFile) {
+                    return sprintf(
+                        '<span class="hash">%s</span>',
+                        str_pad($listFile->lookup, 16, '0', STR_PAD_LEFT)
+                    );
+                }),
 
             TD::make('versions', __('Versions'))
                 ->width(200)

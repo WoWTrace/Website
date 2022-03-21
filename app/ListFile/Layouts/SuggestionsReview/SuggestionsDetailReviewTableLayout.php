@@ -35,7 +35,7 @@ class SuggestionsDetailReviewTableLayout extends Table
     protected function columns(): array
     {
         $columns = [
-            TD::make('id', __('FD ID'))
+            TD::make('id', __('File ID'))
                 ->cantHide()
                 ->alignLeft(),
             TD::make('suggestedPath', __('Suggested Path'))
@@ -56,15 +56,13 @@ class SuggestionsDetailReviewTableLayout extends Table
         }
 
         if ($this->showCurrentPath) {
-            $columns[] =
-                TD::make('currentPath', __('Current Path'))
-                    ->cantHide()
-                    ->alignLeft();
+            $columns[] = TD::make('currentPath', __('Current Path'))
+                ->cantHide()
+                ->alignLeft();
         }
 
         if ($this->showLookup) {
-        $columns[] =
-            TDExtended::make('calculatedLookup', __('Calculated Lookup'))
+            $columns[] = TDExtended::make('calculatedLookup', __('Calculated Lookup'))
                 ->cantHide()
                 ->alignLeft()
                 ->renderColor(static function (Model $model, TDExtended $td): void {
@@ -81,11 +79,11 @@ class SuggestionsDetailReviewTableLayout extends Table
                     return bin2hex(strrev(Root::jenkins_hashlittle2($model->suggestedPath, true)));
                 });
 
-        $columns[] =
-            TD::make('currentLookup', __('Current Lookup'))
-                ->cantHide()
-                ->alignLeft();
-    }
+            $columns[] =
+                TD::make('currentLookup', __('Current Lookup'))
+                    ->cantHide()
+                    ->alignLeft();
+        }
 
         return $columns;
     }

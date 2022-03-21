@@ -109,8 +109,8 @@ class ListFileScreen extends Screen
         ListFile::query()->insertOrIgnore([
             'id'        => $id,
             'path'      => $path,
-            'extension' => pathinfo($path, PATHINFO_EXTENSION),
-            'user_id'   => Auth::id()
+            'type'      => pathinfo($path, PATHINFO_EXTENSION),
+            'userId'    => Auth::id()
         ]);
 
         Toast::info(__('New ListFile entry added.'));

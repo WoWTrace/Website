@@ -23,7 +23,7 @@ class ListFileAddLayout extends Rows
                 ->min(1)
                 ->max(2147483647)
                 ->required()
-                ->title(__('FD ID'))
+                ->title(__('File ID'))
                 ->placeholder('1'),
 
             Input::make('listfile.path')

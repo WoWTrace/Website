@@ -29,7 +29,6 @@ class SuggestionsReviewScreen extends Screen
         return [
             'suggestionsReview' => ListFileSuggestion::query()
                 ->select(['suggestionKey', 'userId', DB::raw('COUNT(*) as entryCount')])
-                ->where('userId', '!=', Auth::id())
                 ->whereNull('accepted')
                 ->groupBy('suggestionKey')
                 ->paginate()
