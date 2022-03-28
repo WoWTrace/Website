@@ -2,6 +2,7 @@
 
 namespace App\Build\Screens;
 
+use App\Build\Layouts\BuildCompareModalLayout;
 use App\Build\Layouts\BuildTableLayout;
 use App\Build\Layouts\DetailModalLayout;
 use App\Common\Screen\Screen;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
+use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 
@@ -32,7 +34,9 @@ class BuildScreen extends Screen
             'build' => Build::query()
                 ->filters()
                 ->defaultSort('clientBuild', 'desc')
-                ->paginate($request->query('pageSize', 25))
+                ->paginate($request->query('pageSize', 25)),
+            'buildCompare' => Build::query()
+                ->defaultSort('clientBuild', 'desc')
         ];
     }
 
@@ -40,6 +44,10 @@ class BuildScreen extends Screen
     public function commandBar(): array
     {
         return [
+            ModalToggle::make(__('Compare'))
+                ->icon('eyeglasses')
+                ->modal('buildCompareModal')
+                ->modalTitle(__('Build Compare')),
             DropDown::make(sprintf('Page Size: %u', \request()->query('pageSize', 25)))
                 ->type(Color::SECONDARY())
                 ->icon('book-open')
@@ -61,6 +69,10 @@ class BuildScreen extends Screen
                 ->withoutApplyButton()
                 ->size('modal-xl')
                 ->async('asyncGetBuild'),
+            Layout::modal('buildCompareModal', BuildCompareModalLayout::class)
+                ->applyButton('Compare')
+                ->closeButton('Close')
+                ->method('buildCompare'),
         ];
     }
 
@@ -69,6 +81,21 @@ class BuildScreen extends Screen
         return [
             'buildDetails' => $build,
         ];
+    }
+
+    public function buildCompare(Request $request): void
+    {
+        dd($request);
+
+        // $request->validate([
+        //     'build.old' => 'string|required|unique:build.old',
+        //     'build.new' => 'string|required|unique:build.new',
+        // ]);
+
+        // $oldBuild = $request->input('build.old');
+        // $newBuild = $request->input('build.new');
+
+        // dd($oldBuild, $newBuild);
     }
 
     public function selectPageSize(Request $request)
