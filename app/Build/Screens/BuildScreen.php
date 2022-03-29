@@ -5,8 +5,10 @@ namespace App\Build\Screens;
 use App\Build\Layouts\BuildCompareModalLayout;
 use App\Build\Layouts\BuildTableLayout;
 use App\Build\Layouts\DetailModalLayout;
+use App\Build\Platform;
 use App\Common\Screen\Screen;
 use App\Models\Build;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Orchid\Screen\Actions\Button;
@@ -14,6 +16,7 @@ use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
+use Orchid\Support\Facades\Toast;
 
 class BuildScreen extends Screen
 {
@@ -35,8 +38,6 @@ class BuildScreen extends Screen
                 ->filters()
                 ->defaultSort('clientBuild', 'desc')
                 ->paginate($request->query('pageSize', 25)),
-            'buildCompare' => Build::query()
-                ->defaultSort('clientBuild', 'desc')
         ];
     }
 
@@ -47,7 +48,8 @@ class BuildScreen extends Screen
             ModalToggle::make(__('Compare'))
                 ->icon('eyeglasses')
                 ->modal('buildCompareModal')
-                ->modalTitle(__('Build Compare')),
+                ->modalTitle(__('Build Compare'))
+                ->method('buildCompare'),
             DropDown::make(sprintf('Page Size: %u', \request()->query('pageSize', 25)))
                 ->type(Color::SECONDARY())
                 ->icon('book-open')
@@ -71,8 +73,7 @@ class BuildScreen extends Screen
                 ->async('asyncGetBuild'),
             Layout::modal('buildCompareModal', BuildCompareModalLayout::class)
                 ->applyButton('Compare')
-                ->closeButton('Close')
-                ->method('buildCompare'),
+                ->closeButton('Close'),
         ];
     }
 
@@ -83,19 +84,25 @@ class BuildScreen extends Screen
         ];
     }
 
-    public function buildCompare(Request $request): void
+    public function buildCompare(Request $request): RedirectResponse
     {
-        dd($request);
+        $request->validate([
+            'build.old' => 'int|required',
+            'build.new' => 'int|required',
+        ]);
 
-        // $request->validate([
-        //     'build.old' => 'string|required|unique:build.old',
-        //     'build.new' => 'string|required|unique:build.new',
-        // ]);
+        $oldBuildId = $request->input('build.old');
+        $newBuildId = $request->input('build.new');
 
-        // $oldBuild = $request->input('build.old');
-        // $newBuild = $request->input('build.new');
+        if ($oldBuildId === $newBuildId) {
+            Toast::error('You cannot compare a build to itself.');
+            return Redirect::back();
+        }
 
-        // dd($oldBuild, $newBuild);
+        return Redirect::route(Platform::ROUTE_BUILDS_COMPARE_KEY, [
+            'oldBuild' => $oldBuildId,
+            'newBuild' => $newBuildId,
+        ]);
     }
 
     public function selectPageSize(Request $request)

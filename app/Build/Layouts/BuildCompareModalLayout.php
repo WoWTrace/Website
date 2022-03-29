@@ -22,13 +22,13 @@ class BuildCompareModalLayout extends Rows
                 ->title(__('Old Build'))
                 ->help(__('Select the old build to compare against.'))
                 ->required()
-                ->fromModel(Build::class, 'name'),
+                ->fromModel(Build::class, 'name', 'id'),
                 
             Select::make('build.new')
                 ->title(__('New Build'))
                 ->help(__('Select the new build to compare against.'))
                 ->required()
-                ->fromModel(Build::class, 'name'),
+                ->fromModel(Build::class, 'name', 'id'),
         ];
     }
 }
