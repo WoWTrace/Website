@@ -29,10 +29,9 @@ class CreateListFileTable extends Migration
                 ->on('users')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
-        });
 
-        // Because Laravel doesn't support full text search migration
-        DB::statement(sprintf('ALTER TABLE `%s` ADD FULLTEXT INDEX `listfile_path_fulltext` (`path`);', self::TABLE));
+            $table->fullText('path');
+        });
     }
 
     public function down(): void
