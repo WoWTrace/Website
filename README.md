@@ -1,4 +1,4 @@
-# WIP: WoWTrace
+# WoWTrace Website (WIP)
 
 ## Philosophy 
 The website is only responsible for displaying the data collected in the backend project and does not process any Blizzard data itself.
