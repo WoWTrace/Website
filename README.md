@@ -1,5 +1,8 @@
 # WIP: WoWTrace
 
+## Philosophy 
+The website is only responsible for displaying the data collected in the backend project and does not process any Blizzard data itself.
+
 ## Setup
 1. Copy .env.example to .env
 2. Configure your settings in .env file
